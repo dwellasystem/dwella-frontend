@@ -20,7 +20,7 @@ function AddEmployee() {
         console.error("Error adding employee:", error)
         return
     }
-    console.log('Employee added successfully')
+    navigate({to:'/admin/employee'})
   }
 
     
@@ -132,7 +132,7 @@ function AddEmployee() {
 
                 <Col className='d-flex gap-3 flex-wrap align-items-center justify-content-end mt-3'>
                     <div onClick={() => navigate({to:'/admin/employee'})} className='d-flex flex-grow-1 flex-sm-grow-0 align-items-center justify-content-center px-5 py-3 rounded-3' style={{backgroundColor:"#CED4F5", cursor:"pointer"}}><span className='text-black text-center fw-bold'>Cancel</span></div>
-                    <Button type="submit" title="Add Employee" className='d-flex flex-grow-1 flex-sm-grow-0 align-items-center justify-content-center fw-bold border-0 px-3 py-3 rounded-3' style={{backgroundColor:"#344CB7", cursor:"pointer"}}>Add Resident</Button>
+                    <Button type="submit" title="Add Employee" className='d-flex flex-grow-1 flex-sm-grow-0 align-items-center justify-content-center fw-bold border-0 px-3 py-3 rounded-3' style={{backgroundColor:"#344CB7", cursor:"pointer"}}>Add Employee</Button>
                 </Col>
             </Row>
         </Form>
