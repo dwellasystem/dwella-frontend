@@ -1,0 +1,54 @@
+.show-sidebar{
+  padding: 10px 1.5rem;
+  background-color: rgb(136, 150, 221, 0.3);
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  flex-wrap: nowrap;
+}
+
+.nav-link{
+  color: black;
+  font-weight: bold;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #19417e; /* Your desired background color */
+  color: white;              /* Your desired text color */
+  font-weight: bold;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.link-active{
+  background-color: #19417e;
+  color: white;
+  padding: 10px;
+  transition: 300ms ease-in;
+}
+
+.link-inactive{
+  color: black;
+  padding: 10px;
+  transition: 300ms ease-out;
+}
+
+@media (max-width: 567px ) {
+  .show-sidebar{
+    position: sticky;
+    bottom: 0;
+    background-color: #dcdef5;
+    flex-wrap: wrap;
+    /* top: 0;
+    bottom: 0;
+    z-index: 10;
+    transition-delay: 300ms ease-in-out;
+    padding: 3px 0.5rem; */
+  } 
+
+  .nav-link{
+  font-size: 1rem;
+}
+}
