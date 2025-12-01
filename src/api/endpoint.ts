@@ -9,7 +9,7 @@ import type { IUnitUrls } from "../interfaces/endpoints/IUnitUrls";
 import type { IUserUrls } from "../interfaces/endpoints/IUserUrls";
 
 
-export const API_BASE_URL = "http://127.0.0.1:8000/api";
+export const API_BASE_URL = "https://dwella-backend.onrender.com/api";
 
 
 // Url endpoints for authentication to get token and refresh tokens
