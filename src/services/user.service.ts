@@ -10,7 +10,7 @@ const UserService = () => {
 
     const getPaginatedUsers = async (params?: {}) => {
         try{
-            const response = await api.get<Paginated<User>>(`http://127.0.0.1:8000/api/users-paginated`, {
+            const response = await api.get<Paginated<User>>(`https://dwella-backend.onrender.com/api/users-paginated`, {
                 params: params
             })
             return response;
