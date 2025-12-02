@@ -41,13 +41,13 @@ function MyUnitsModal({ onShow, onHide, selectedUnit, updateUnit }: Props) {
   };
 
   // ✅ Properly typed checkbox handler
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target; // ✅ Type-safe access to `checked`
-    setFormData(prev => ({
-      ...prev,
-      [name]: checked,
-    }));
-  };
+  // const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const { name, checked } = e.target; // ✅ Type-safe access to `checked`
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: checked,
+  //   }));
+  // };
 
   const handleSave = async() => {
     await updateUnit(selectedUnit?.id?.toString() || '', formData);
@@ -78,9 +78,9 @@ function MyUnitsModal({ onShow, onHide, selectedUnit, updateUnit }: Props) {
             </Form.Select>
           </Form.Group>
 
-          <hr />
+          {/* <hr /> */}
 
-          <Form.Group className="mb-3">
+          {/* <Form.Group className="mb-3">
             <Form.Check
               type="checkbox"
               label="Amenities"
@@ -102,7 +102,7 @@ function MyUnitsModal({ onShow, onHide, selectedUnit, updateUnit }: Props) {
               checked={formData.maintenance}
               onChange={handleCheckboxChange}
             />
-          </Form.Group>
+          </Form.Group> */}
         </Form>
       </Modal.Body>
       <Modal.Footer>

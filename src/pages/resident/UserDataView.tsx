@@ -2,6 +2,7 @@
 import React from 'react';
 import { BiSolidReport } from 'react-icons/bi';
 import { useAuth } from '../../contexts/auth/AuthContext';
+import { API_BASE_URL } from '../../api/endpoint';
 
 interface FinancialReportData {
   report_type: string;
@@ -71,7 +72,7 @@ const UserDataView: React.FC = () => {
   const {user} = useAuth();
   const fetchFinancialReport = async (): Promise<FinancialReportData | null> => {
     try {
-      const response = await fetch(`http://localhost:8000/api/bills/financial-reports/user/${user?.id}/?period=yearly`);
+      const response = await fetch(`${API_BASE_URL}/bills/financial-reports/user/${user?.id}/?period=yearly`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

@@ -5,6 +5,7 @@ import { IoMdAdd, IoMdDownload } from 'react-icons/io';
 import Search from '../../../../../components/Search';
 import { useMemo, useState } from 'react';
 import { FiltersContext } from '../../../../../contexts/FilterContext';
+import { API_BASE_URL } from '../../../../../api/endpoint';
 
 export const Route = createFileRoute('/_protected/admin/financial/_financial')({
   component: RouteComponent,
@@ -73,7 +74,7 @@ function RouteComponent() {
         status: downloadStatus,
       });
 
-      const url = `http://localhost:8000/api/bills/export/paid-bills/excel/?${params}`;
+      const url = `${API_BASE_URL}/bills/export/paid-bills/excel/?${params}`;
       
       // Create a temporary anchor element to trigger download
       const link = document.createElement('a');
