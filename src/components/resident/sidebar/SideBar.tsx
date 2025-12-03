@@ -10,6 +10,7 @@ import logo from "../../../assets/dwella-logo.png"
 import { Link, useLocation } from "@tanstack/react-router";
 import { CiMenuFries } from "react-icons/ci";
 import { IoCloseSharp } from "react-icons/io5";
+import { RiInformationFill } from "react-icons/ri";
 // import { useAuth } from "../../../contexts/auth/AuthContext";
 // import { LiaMoneyBillSolid } from "react-icons/lia";
 
@@ -102,6 +103,12 @@ function SideBar() {
               <TbUserQuestion />
               <span className={`${ isMenuOpen ? "d-block" : "d-none"} d-md-block`}>
                 Inquiries
+              </span>
+            </Link>
+            <Link to="/resident/information" className={`text-decoration-none d-flex align-items-center fw-bold gap-2 rounded ${location.pathname.startsWith('/resident/information') ? 'link-active' : 'link-inactive'}`}>
+              <RiInformationFill />
+              <span className={`${ isMenuOpen ? "d-block" : "d-none"} d-md-block text-nowrap`}>
+              Hoa Information
               </span>
             </Link>
           </Nav>

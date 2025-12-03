@@ -10,6 +10,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { CiMenuFries } from "react-icons/ci";
 import { IoCloseSharp } from "react-icons/io5";
 import { ImCreditCard } from "react-icons/im";
+import { RiInformationFill } from "react-icons/ri";
 
 function SideBar() {
 
@@ -81,6 +82,13 @@ function SideBar() {
               <TbUserQuestion />
               <span className={`${ isMenuOpen ? "d-block" : "d-none"} d-md-block`}>
               Inquiries
+              </span>
+            </Link>
+
+            <Link to="/employee/information" className={`text-decoration-none d-flex align-items-center fw-bold gap-2 rounded ${location.pathname.startsWith('/employee/information') ? 'link-active' : 'link-inactive'}`}>
+              <RiInformationFill />
+              <span className={`${ isMenuOpen ? "d-block" : "d-none"} d-md-block text-nowrap`}>
+              Hoa Information
               </span>
             </Link>
 

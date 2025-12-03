@@ -8,8 +8,9 @@ import type { IPaymentUrls } from "../interfaces/endpoints/IPaymentUrls";
 import type { IUnitUrls } from "../interfaces/endpoints/IUnitUrls";
 import type { IUserUrls } from "../interfaces/endpoints/IUserUrls";
 
-
-export const API_BASE_URL = "https://dwella-backend.onrender.com/api";
+const DEVELOPMENT = 'http://localhost:8000'
+// const PRODUCTION = 'https://dwella-backend.onrender.com'
+export const API_BASE_URL = `${DEVELOPMENT}/api`;
 
 
 // Url endpoints for authentication to get token and refresh tokens

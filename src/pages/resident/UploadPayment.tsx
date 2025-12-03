@@ -96,97 +96,120 @@ function UploadPayment() {
     setSelectedMethod(method || null);
   };
 
-  
   const submitForm = async (e: FormEvent) => {
-  e.preventDefault();
-  
-  // Validation for both payment types
-  if (!formData.user || !formData.payment_method) {
-    setToastMessage("Required fields are missing");
-    setToastVariant('danger');
-    setShowToast(true);
-    return;
-  }
+    e.preventDefault();
+    
+    // Validation for required fields
+    if (!formData.user || !formData.payment_method) {
+      setToastMessage("Required fields are missing");
+      setToastVariant('danger');
+      setShowToast(true);
+      return;
+    }
 
-  if (formData.amount <= 0 || !formData.reference_number.trim()) {
-    setToastMessage("Amount must be positive and reference number is required");
-    setToastVariant('danger');
-    setShowToast(true);
-    return;
-  }
+    if (formData.amount <= 0 || !formData.reference_number.trim()) {
+      setToastMessage("Amount must be positive and reference number is required");
+      setToastVariant('danger');
+      setShowToast(true);
+      return;
+    }
 
-  // Additional validation for regular payments
-  if (activeTab === "regular" && !formData.bill) {
-    setToastMessage("Bill selection is required for regular payments");
-    setToastVariant('danger');
-    setShowToast(true);
-    return;
-  }
+    // Additional validation for regular payments
+    if (activeTab === "regular" && !formData.bill) {
+      setToastMessage("Bill selection is required for regular payments");
+      setToastVariant('danger');
+      setShowToast(true);
+      return;
+    }
 
-  // Additional validation for advance payments
-  if (activeTab === "advance" && (!formData.advance_start_date || !formData.advance_end_date)) {
-    setToastMessage("Start and end dates are required for advance payments");
-    setToastVariant('danger');
-    setShowToast(true);
-    return;
-  }
+    // Additional validation for advance payments
+    if (activeTab === "advance" && (!formData.advance_start_date || !formData.advance_end_date)) {
+      setToastMessage("Start and end dates are required for advance payments");
+      setToastVariant('danger');
+      setShowToast(true);
+      return;
+    }
 
-  // Prepare form data
-  const data = new FormData();
-  data.append('user', formData.user.toString());
-  
-  if (formData.unit) {
-    data.append('unit', formData.unit.toString());
-  }
-  
-  data.append('amount', formData.amount.toString());
-  data.append('payment_method', formData.payment_method.toString());
-  data.append('reference_number', formData.reference_number);
-  data.append('payment_type', activeTab);
-  
-  // Only append photo if it exists
-  if (formData.photo) {
+    // Image validation - check if photo is uploaded
+    if (!formData.photo) {
+      setToastMessage("Proof of payment image is required. Please upload a photo of your payment transaction.");
+      setToastVariant('danger');
+      setShowToast(true);
+      return;
+    }
+
+    // Validate file type
+    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedImageTypes.includes(formData.photo.type)) {
+      setToastMessage("Please upload a valid image file (JPEG, PNG, GIF, WebP)");
+      setToastVariant('danger');
+      setShowToast(true);
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (formData.photo.size > maxSize) {
+      setToastMessage("Image file size must be less than 5MB");
+      setToastVariant('danger');
+      setShowToast(true);
+      return;
+    }
+
+    // Prepare form data
+    const data = new FormData();
+    data.append('user', formData.user.toString());
+    
+    if (formData.unit) {
+      data.append('unit', formData.unit.toString());
+    }
+    
+    data.append('amount', formData.amount.toString());
+    data.append('payment_method', formData.payment_method.toString());
+    data.append('reference_number', formData.reference_number);
+    data.append('payment_type', activeTab);
+    
+    // Append the photo
     data.append('proof_of_payment', formData.photo);
-  }
-  
-  // Add bill for regular payments
-  if (activeTab === "regular" && formData.bill) {
-    data.append('bill', formData.bill.toString());
-  }
-  
-  // Add advance dates for advance payments
-  if (activeTab === "advance" && formData.advance_start_date && formData.advance_end_date) {
-    data.append('advance_start_date', formData.advance_start_date);
-    data.append('advance_end_date', formData.advance_end_date);
-  }
+    
+    // Add bill for regular payments
+    if (activeTab === "regular" && formData.bill) {
+      data.append('bill', formData.bill.toString());
+    }
+    
+    // Add advance dates for advance payments
+    if (activeTab === "advance" && formData.advance_start_date && formData.advance_end_date) {
+      data.append('advance_start_date', formData.advance_start_date);
+      data.append('advance_end_date', formData.advance_end_date);
+    }
 
-  try {
-    // First make the API call
-    await createPaymentRecord(data, { 'Content-Type': 'multipart/form-data' });
-    
-    // Only after successful API call, show success message
-    setToastMessage("Payment uploaded successfully!");
-    setToastVariant('success');
-    setShowToast(true);
+    try {
+      // First make the API call
+      await createPaymentRecord(data, { 'Content-Type': 'multipart/form-data' });
+      
+      // Only after successful API call, show success message
+      setToastMessage("Payment uploaded successfully!");
+      setToastVariant('success');
+      setShowToast(true);
 
-    // Wait a moment for the user to see the success message, then navigate
-    setTimeout(() => {
-      navigate({ to: '/resident/dashboard' });
-    }, 2000); // 2 second delay
-    
-  } catch (error: any) {
-    // Handle duplicate payment error specifically
-    const errorMessage = error.data?.non_field_errors?.[0] || 
-                        error.data?.reference_number?.[0] || 
-                        error.data?.detail || 
-                        "An error occurred while processing your payment";
-    
-    setToastMessage(errorMessage);
-    setToastVariant('dark');
-    setShowToast(true);
-    console.error(error);
+      // Wait a moment for the user to see the success message, then navigate
+      setTimeout(() => {
+        navigate({ to: '/resident/dashboard' });
+      }, 2000); // 2 second delay
+      
+    } catch (error: any) {
+      // Handle duplicate payment error specifically
+      const errorMessage = error.data?.non_field_errors?.[0] || 
+                          error.data?.reference_number?.[0] || 
+                          error.data?.detail || 
+                          "An error occurred while processing your payment";
+      
+      setToastMessage(errorMessage);
+      setToastVariant('dark');
+      setShowToast(true);
+      console.error(error);
+    }
   }
-}
 
   const handleBillChange = async (e: ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
@@ -618,6 +641,11 @@ function UploadPayment() {
                   setFormData={setFormData} 
                   title='Upload proof of payment' 
                 />
+                {!formData.photo && (
+                  <div className="text-danger small mt-1">
+                    * Proof of payment image is required
+                  </div>
+                )}
               </Col>
             </Row>
 

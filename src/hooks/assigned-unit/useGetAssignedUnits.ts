@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import AssignedUnitService from "../../services/assignedUnit.service";
-import type { Unit } from "recharts/types/cartesian/CartesianAxis";
+
 import type { User } from "../../models/User.model";
+import type { Unit } from "../../models/Unit.model";
 
 interface AssignedUnitPopulated {
   id?: number;

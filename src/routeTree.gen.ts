@@ -31,6 +31,7 @@ import { Route as ProtectedResidentNoticesImport } from './routes/_protected/res
 import { Route as ProtectedResidentMyUnitsImport } from './routes/_protected/resident/my-units'
 import { Route as ProtectedResidentMonthlyBillImport } from './routes/_protected/resident/monthly-bill'
 import { Route as ProtectedResidentInquiriesImport } from './routes/_protected/resident/inquiries'
+import { Route as ProtectedResidentInformationImport } from './routes/_protected/resident/information'
 import { Route as ProtectedResidentFinancialImport } from './routes/_protected/resident/financial'
 import { Route as ProtectedResidentEditProfileImport } from './routes/_protected/resident/edit-profile'
 import { Route as ProtectedResidentDashboardImport } from './routes/_protected/resident/dashboard'
@@ -59,11 +60,13 @@ import { Route as ProtectedEmployeePaymentsIndexImport } from './routes/_protect
 import { Route as ProtectedEmployeeNoticesIndexImport } from './routes/_protected/employee/notices/index'
 import { Route as ProtectedEmployeeMonthlyBillIndexImport } from './routes/_protected/employee/monthly-bill/index'
 import { Route as ProtectedEmployeeInquiriesIndexImport } from './routes/_protected/employee/inquiries/index'
+import { Route as ProtectedEmployeeInformationIndexImport } from './routes/_protected/employee/information/index'
 import { Route as ProtectedEmployeeAssignedUnitsIndexImport } from './routes/_protected/employee/assigned-units/index'
 import { Route as ProtectedAdminUnitsIndexImport } from './routes/_protected/admin/units/index'
 import { Route as ProtectedAdminResidentIndexImport } from './routes/_protected/admin/resident/index'
 import { Route as ProtectedAdminNotificationsIndexImport } from './routes/_protected/admin/notifications/index'
 import { Route as ProtectedAdminMonthlyBillIndexImport } from './routes/_protected/admin/monthly-bill/index'
+import { Route as ProtectedAdminInformationIndexImport } from './routes/_protected/admin/information/index'
 import { Route as ProtectedAdminEmployeeIndexImport } from './routes/_protected/admin/employee/index'
 import { Route as ProtectedAdminAssignedUnitsIndexImport } from './routes/_protected/admin/assigned-units/index'
 import { Route as ProtectedEmployeeResidentAddResidentImport } from './routes/_protected/employee/resident/add-resident'
@@ -236,6 +239,13 @@ const ProtectedResidentInquiriesRoute = ProtectedResidentInquiriesImport.update(
     getParentRoute: () => ProtectedResidentRouteRoute,
   } as any,
 )
+
+const ProtectedResidentInformationRoute =
+  ProtectedResidentInformationImport.update({
+    id: '/information',
+    path: '/information',
+    getParentRoute: () => ProtectedResidentRouteRoute,
+  } as any)
 
 const ProtectedResidentFinancialRoute = ProtectedResidentFinancialImport.update(
   {
@@ -427,6 +437,13 @@ const ProtectedEmployeeInquiriesIndexRoute =
     getParentRoute: () => ProtectedEmployeeInquiriesRouteRoute,
   } as any)
 
+const ProtectedEmployeeInformationIndexRoute =
+  ProtectedEmployeeInformationIndexImport.update({
+    id: '/information/',
+    path: '/information/',
+    getParentRoute: () => ProtectedEmployeeRouteRoute,
+  } as any)
+
 const ProtectedEmployeeAssignedUnitsIndexRoute =
   ProtectedEmployeeAssignedUnitsIndexImport.update({
     id: '/assigned-units/',
@@ -459,6 +476,13 @@ const ProtectedAdminMonthlyBillIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => ProtectedAdminMonthlyBillRouteRoute,
+  } as any)
+
+const ProtectedAdminInformationIndexRoute =
+  ProtectedAdminInformationIndexImport.update({
+    id: '/information/',
+    path: '/information/',
+    getParentRoute: () => ProtectedAdminRouteRoute,
   } as any)
 
 const ProtectedAdminEmployeeIndexRoute =
@@ -959,6 +983,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedResidentFinancialImport
       parentRoute: typeof ProtectedResidentRouteImport
     }
+    '/_protected/resident/information': {
+      id: '/_protected/resident/information'
+      path: '/information'
+      fullPath: '/resident/information'
+      preLoaderRoute: typeof ProtectedResidentInformationImport
+      parentRoute: typeof ProtectedResidentRouteImport
+    }
     '/_protected/resident/inquiries': {
       id: '/_protected/resident/inquiries'
       path: '/inquiries'
@@ -1190,6 +1221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminEmployeeIndexImport
       parentRoute: typeof ProtectedAdminEmployeeRouteImport
     }
+    '/_protected/admin/information/': {
+      id: '/_protected/admin/information/'
+      path: '/information'
+      fullPath: '/admin/information'
+      preLoaderRoute: typeof ProtectedAdminInformationIndexImport
+      parentRoute: typeof ProtectedAdminRouteImport
+    }
     '/_protected/admin/monthly-bill/': {
       id: '/_protected/admin/monthly-bill/'
       path: '/'
@@ -1223,6 +1261,13 @@ declare module '@tanstack/react-router' {
       path: '/assigned-units'
       fullPath: '/employee/assigned-units'
       preLoaderRoute: typeof ProtectedEmployeeAssignedUnitsIndexImport
+      parentRoute: typeof ProtectedEmployeeRouteImport
+    }
+    '/_protected/employee/information/': {
+      id: '/_protected/employee/information/'
+      path: '/information'
+      fullPath: '/employee/information'
+      preLoaderRoute: typeof ProtectedEmployeeInformationIndexImport
       parentRoute: typeof ProtectedEmployeeRouteImport
     }
     '/_protected/employee/inquiries/': {
@@ -1599,6 +1644,7 @@ interface ProtectedAdminRouteRouteChildren {
   ProtectedAdminProfileRoute: typeof ProtectedAdminProfileRoute
   ProtectedAdminIndexRoute: typeof ProtectedAdminIndexRoute
   ProtectedAdminAssignedUnitsIndexRoute: typeof ProtectedAdminAssignedUnitsIndexRoute
+  ProtectedAdminInformationIndexRoute: typeof ProtectedAdminInformationIndexRoute
   ProtectedAdminUnitsIndexRoute: typeof ProtectedAdminUnitsIndexRoute
 }
 
@@ -1618,6 +1664,7 @@ const ProtectedAdminRouteRouteChildren: ProtectedAdminRouteRouteChildren = {
   ProtectedAdminProfileRoute: ProtectedAdminProfileRoute,
   ProtectedAdminIndexRoute: ProtectedAdminIndexRoute,
   ProtectedAdminAssignedUnitsIndexRoute: ProtectedAdminAssignedUnitsIndexRoute,
+  ProtectedAdminInformationIndexRoute: ProtectedAdminInformationIndexRoute,
   ProtectedAdminUnitsIndexRoute: ProtectedAdminUnitsIndexRoute,
 }
 
@@ -1751,6 +1798,7 @@ interface ProtectedEmployeeRouteRouteChildren {
   ProtectedEmployeeTaskSummaryUnverifiedPaymentsRoute: typeof ProtectedEmployeeTaskSummaryUnverifiedPaymentsRoute
   ProtectedEmployeeMonthlyBillCreateRoute: typeof ProtectedEmployeeMonthlyBillCreateRoute
   ProtectedEmployeeAssignedUnitsIndexRoute: typeof ProtectedEmployeeAssignedUnitsIndexRoute
+  ProtectedEmployeeInformationIndexRoute: typeof ProtectedEmployeeInformationIndexRoute
   ProtectedEmployeeMonthlyBillIndexRoute: typeof ProtectedEmployeeMonthlyBillIndexRoute
   ProtectedEmployeeUnitsIndexRoute: typeof ProtectedEmployeeUnitsIndexRoute
   ProtectedEmployeeMonthlyBillIdEditRoute: typeof ProtectedEmployeeMonthlyBillIdEditRoute
@@ -1783,6 +1831,8 @@ const ProtectedEmployeeRouteRouteChildren: ProtectedEmployeeRouteRouteChildren =
       ProtectedEmployeeMonthlyBillCreateRoute,
     ProtectedEmployeeAssignedUnitsIndexRoute:
       ProtectedEmployeeAssignedUnitsIndexRoute,
+    ProtectedEmployeeInformationIndexRoute:
+      ProtectedEmployeeInformationIndexRoute,
     ProtectedEmployeeMonthlyBillIndexRoute:
       ProtectedEmployeeMonthlyBillIndexRoute,
     ProtectedEmployeeUnitsIndexRoute: ProtectedEmployeeUnitsIndexRoute,
@@ -1805,6 +1855,7 @@ interface ProtectedResidentRouteRouteChildren {
   ProtectedResidentDashboardRoute: typeof ProtectedResidentDashboardRoute
   ProtectedResidentEditProfileRoute: typeof ProtectedResidentEditProfileRoute
   ProtectedResidentFinancialRoute: typeof ProtectedResidentFinancialRoute
+  ProtectedResidentInformationRoute: typeof ProtectedResidentInformationRoute
   ProtectedResidentInquiriesRoute: typeof ProtectedResidentInquiriesRoute
   ProtectedResidentMonthlyBillRoute: typeof ProtectedResidentMonthlyBillRoute
   ProtectedResidentMyUnitsRoute: typeof ProtectedResidentMyUnitsRoute
@@ -1826,6 +1877,7 @@ const ProtectedResidentRouteRouteChildren: ProtectedResidentRouteRouteChildren =
     ProtectedResidentDashboardRoute: ProtectedResidentDashboardRoute,
     ProtectedResidentEditProfileRoute: ProtectedResidentEditProfileRoute,
     ProtectedResidentFinancialRoute: ProtectedResidentFinancialRoute,
+    ProtectedResidentInformationRoute: ProtectedResidentInformationRoute,
     ProtectedResidentInquiriesRoute: ProtectedResidentInquiriesRoute,
     ProtectedResidentMonthlyBillRoute: ProtectedResidentMonthlyBillRoute,
     ProtectedResidentMyUnitsRoute: ProtectedResidentMyUnitsRoute,
@@ -1889,6 +1941,7 @@ export interface FileRoutesByFullPath {
   '/resident/dashboard': typeof ProtectedResidentDashboardRoute
   '/resident/edit-profile': typeof ProtectedResidentEditProfileRoute
   '/resident/financial': typeof ProtectedResidentFinancialRoute
+  '/resident/information': typeof ProtectedResidentInformationRoute
   '/resident/inquiries': typeof ProtectedResidentInquiriesRoute
   '/resident/monthly-bill': typeof ProtectedResidentMonthlyBillRoute
   '/resident/my-units': typeof ProtectedResidentMyUnitsRoute
@@ -1921,11 +1974,13 @@ export interface FileRoutesByFullPath {
   '/employee/resident/add-resident': typeof ProtectedEmployeeResidentAddResidentRoute
   '/admin/assigned-units': typeof ProtectedAdminAssignedUnitsIndexRoute
   '/admin/employee/': typeof ProtectedAdminEmployeeIndexRoute
+  '/admin/information': typeof ProtectedAdminInformationIndexRoute
   '/admin/monthly-bill/': typeof ProtectedAdminMonthlyBillIndexRoute
   '/admin/notifications/': typeof ProtectedAdminNotificationsIndexRoute
   '/admin/resident/': typeof ProtectedAdminResidentIndexRoute
   '/admin/units': typeof ProtectedAdminUnitsIndexRoute
   '/employee/assigned-units': typeof ProtectedEmployeeAssignedUnitsIndexRoute
+  '/employee/information': typeof ProtectedEmployeeInformationIndexRoute
   '/employee/inquiries/': typeof ProtectedEmployeeInquiriesIndexRoute
   '/employee/monthly-bill': typeof ProtectedEmployeeMonthlyBillIndexRoute
   '/employee/notices/': typeof ProtectedEmployeeNoticesIndexRoute
@@ -1973,6 +2028,7 @@ export interface FileRoutesByTo {
   '/resident/dashboard': typeof ProtectedResidentDashboardRoute
   '/resident/edit-profile': typeof ProtectedResidentEditProfileRoute
   '/resident/financial': typeof ProtectedResidentFinancialRoute
+  '/resident/information': typeof ProtectedResidentInformationRoute
   '/resident/inquiries': typeof ProtectedResidentInquiriesRoute
   '/resident/monthly-bill': typeof ProtectedResidentMonthlyBillRoute
   '/resident/my-units': typeof ProtectedResidentMyUnitsRoute
@@ -2005,11 +2061,13 @@ export interface FileRoutesByTo {
   '/employee/resident/add-resident': typeof ProtectedEmployeeResidentAddResidentRoute
   '/admin/assigned-units': typeof ProtectedAdminAssignedUnitsIndexRoute
   '/admin/employee': typeof ProtectedAdminEmployeeIndexRoute
+  '/admin/information': typeof ProtectedAdminInformationIndexRoute
   '/admin/monthly-bill': typeof ProtectedAdminMonthlyBillIndexRoute
   '/admin/notifications': typeof ProtectedAdminNotificationsIndexRoute
   '/admin/resident': typeof ProtectedAdminResidentIndexRoute
   '/admin/units': typeof ProtectedAdminUnitsIndexRoute
   '/employee/assigned-units': typeof ProtectedEmployeeAssignedUnitsIndexRoute
+  '/employee/information': typeof ProtectedEmployeeInformationIndexRoute
   '/employee/inquiries': typeof ProtectedEmployeeInquiriesIndexRoute
   '/employee/monthly-bill': typeof ProtectedEmployeeMonthlyBillIndexRoute
   '/employee/notices': typeof ProtectedEmployeeNoticesIndexRoute
@@ -2065,6 +2123,7 @@ export interface FileRoutesById {
   '/_protected/resident/dashboard': typeof ProtectedResidentDashboardRoute
   '/_protected/resident/edit-profile': typeof ProtectedResidentEditProfileRoute
   '/_protected/resident/financial': typeof ProtectedResidentFinancialRoute
+  '/_protected/resident/information': typeof ProtectedResidentInformationRoute
   '/_protected/resident/inquiries': typeof ProtectedResidentInquiriesRoute
   '/_protected/resident/monthly-bill': typeof ProtectedResidentMonthlyBillRoute
   '/_protected/resident/my-units': typeof ProtectedResidentMyUnitsRoute
@@ -2098,11 +2157,13 @@ export interface FileRoutesById {
   '/_protected/employee/resident/add-resident': typeof ProtectedEmployeeResidentAddResidentRoute
   '/_protected/admin/assigned-units/': typeof ProtectedAdminAssignedUnitsIndexRoute
   '/_protected/admin/employee/': typeof ProtectedAdminEmployeeIndexRoute
+  '/_protected/admin/information/': typeof ProtectedAdminInformationIndexRoute
   '/_protected/admin/monthly-bill/': typeof ProtectedAdminMonthlyBillIndexRoute
   '/_protected/admin/notifications/': typeof ProtectedAdminNotificationsIndexRoute
   '/_protected/admin/resident/': typeof ProtectedAdminResidentIndexRoute
   '/_protected/admin/units/': typeof ProtectedAdminUnitsIndexRoute
   '/_protected/employee/assigned-units/': typeof ProtectedEmployeeAssignedUnitsIndexRoute
+  '/_protected/employee/information/': typeof ProtectedEmployeeInformationIndexRoute
   '/_protected/employee/inquiries/': typeof ProtectedEmployeeInquiriesIndexRoute
   '/_protected/employee/monthly-bill/': typeof ProtectedEmployeeMonthlyBillIndexRoute
   '/_protected/employee/notices/': typeof ProtectedEmployeeNoticesIndexRoute
@@ -2164,6 +2225,7 @@ export interface FileRouteTypes {
     | '/resident/dashboard'
     | '/resident/edit-profile'
     | '/resident/financial'
+    | '/resident/information'
     | '/resident/inquiries'
     | '/resident/monthly-bill'
     | '/resident/my-units'
@@ -2196,11 +2258,13 @@ export interface FileRouteTypes {
     | '/employee/resident/add-resident'
     | '/admin/assigned-units'
     | '/admin/employee/'
+    | '/admin/information'
     | '/admin/monthly-bill/'
     | '/admin/notifications/'
     | '/admin/resident/'
     | '/admin/units'
     | '/employee/assigned-units'
+    | '/employee/information'
     | '/employee/inquiries/'
     | '/employee/monthly-bill'
     | '/employee/notices/'
@@ -2247,6 +2311,7 @@ export interface FileRouteTypes {
     | '/resident/dashboard'
     | '/resident/edit-profile'
     | '/resident/financial'
+    | '/resident/information'
     | '/resident/inquiries'
     | '/resident/monthly-bill'
     | '/resident/my-units'
@@ -2279,11 +2344,13 @@ export interface FileRouteTypes {
     | '/employee/resident/add-resident'
     | '/admin/assigned-units'
     | '/admin/employee'
+    | '/admin/information'
     | '/admin/monthly-bill'
     | '/admin/notifications'
     | '/admin/resident'
     | '/admin/units'
     | '/employee/assigned-units'
+    | '/employee/information'
     | '/employee/inquiries'
     | '/employee/monthly-bill'
     | '/employee/notices'
@@ -2337,6 +2404,7 @@ export interface FileRouteTypes {
     | '/_protected/resident/dashboard'
     | '/_protected/resident/edit-profile'
     | '/_protected/resident/financial'
+    | '/_protected/resident/information'
     | '/_protected/resident/inquiries'
     | '/_protected/resident/monthly-bill'
     | '/_protected/resident/my-units'
@@ -2370,11 +2438,13 @@ export interface FileRouteTypes {
     | '/_protected/employee/resident/add-resident'
     | '/_protected/admin/assigned-units/'
     | '/_protected/admin/employee/'
+    | '/_protected/admin/information/'
     | '/_protected/admin/monthly-bill/'
     | '/_protected/admin/notifications/'
     | '/_protected/admin/resident/'
     | '/_protected/admin/units/'
     | '/_protected/employee/assigned-units/'
+    | '/_protected/employee/information/'
     | '/_protected/employee/inquiries/'
     | '/_protected/employee/monthly-bill/'
     | '/_protected/employee/notices/'
@@ -2469,6 +2539,7 @@ export const routeTree = rootRoute
         "/_protected/admin/profile",
         "/_protected/admin/",
         "/_protected/admin/assigned-units/",
+        "/_protected/admin/information/",
         "/_protected/admin/units/"
       ]
     },
@@ -2490,6 +2561,7 @@ export const routeTree = rootRoute
         "/_protected/employee/_task-summary/unverified-payments",
         "/_protected/employee/monthly-bill/create",
         "/_protected/employee/assigned-units/",
+        "/_protected/employee/information/",
         "/_protected/employee/monthly-bill/",
         "/_protected/employee/units/",
         "/_protected/employee/monthly-bill/$id/edit",
@@ -2507,6 +2579,7 @@ export const routeTree = rootRoute
         "/_protected/resident/dashboard",
         "/_protected/resident/edit-profile",
         "/_protected/resident/financial",
+        "/_protected/resident/information",
         "/_protected/resident/inquiries",
         "/_protected/resident/monthly-bill",
         "/_protected/resident/my-units",
@@ -2653,6 +2726,10 @@ export const routeTree = rootRoute
       "filePath": "_protected/resident/financial.tsx",
       "parent": "/_protected/resident"
     },
+    "/_protected/resident/information": {
+      "filePath": "_protected/resident/information.tsx",
+      "parent": "/_protected/resident"
+    },
     "/_protected/resident/inquiries": {
       "filePath": "_protected/resident/inquiries.tsx",
       "parent": "/_protected/resident"
@@ -2796,6 +2873,10 @@ export const routeTree = rootRoute
       "filePath": "_protected/admin/employee/index.tsx",
       "parent": "/_protected/admin/employee"
     },
+    "/_protected/admin/information/": {
+      "filePath": "_protected/admin/information/index.tsx",
+      "parent": "/_protected/admin"
+    },
     "/_protected/admin/monthly-bill/": {
       "filePath": "_protected/admin/monthly-bill/index.tsx",
       "parent": "/_protected/admin/monthly-bill"
@@ -2814,6 +2895,10 @@ export const routeTree = rootRoute
     },
     "/_protected/employee/assigned-units/": {
       "filePath": "_protected/employee/assigned-units/index.tsx",
+      "parent": "/_protected/employee"
+    },
+    "/_protected/employee/information/": {
+      "filePath": "_protected/employee/information/index.tsx",
       "parent": "/_protected/employee"
     },
     "/_protected/employee/inquiries/": {
