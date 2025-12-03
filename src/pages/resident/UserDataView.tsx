@@ -20,6 +20,12 @@ interface FinancialReportData {
     average_payment: number;
     payment_completion: string;
     average_monthly_payment: number;
+    // Add expense fields
+    security_fee: number;
+    maintenance_fee: number;
+    amenities_fee: number;
+    total_expenses: number;
+    total_monthly_obligation: number; // rent + all fees
   };
   monthly_breakdown: Array<{
     month: string;
@@ -46,6 +52,11 @@ interface FinancialReportData {
       unit_completion: string;
       months_with_payments: number;
       percentage_of_total: number;
+      // Add unit-specific expenses
+      security_fee: number;
+      maintenance_fee: number;
+      amenities_fee: number;
+      total_monthly_fees: number;
     }>;
   };
 }
@@ -113,12 +124,95 @@ const UserDataView: React.FC = () => {
           <h1 style="color: #344CB7; margin-top: 10px; font-size: 25px; font-weight: bold;">DWELLA</h1>
           <h1 style="color: #344CB7; margin: 0; font-size: 20px; font-weight: bold;">FINANCIAL STATEMENT ${reportData.year}</h1>
           <p style="color: #666; margin: 5px 0 0 0; font-size: 11px;">Generated on ${new Date().toLocaleDateString('en-PH')} • ID: USR-${reportData.user_id}</p>
+          <p style="color: #666; margin: 2px 0 0 0; font-size: 9px;">Tenant: ${reportData.user_name} • ${reportData.user_email}</p>
+        </div>
+
+        <!-- Monthly Expenses Summary -->
+        <div style="margin-bottom: 20px;">
+          <h2 style="color: #344CB7; border-bottom: 1px solid #344CB7; padding-bottom: 5px; font-size: 14px; margin-bottom: 12px;">
+            MONTHLY EXPENSES SUMMARY
+          </h2>
+          
+          <!-- Main Expense Categories -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
+            <!-- Security Fee Card -->
+            <div style="background: #e8f5e8; padding: 12px; border-radius: 6px; text-align: center; border-left: 3px solid #28a745;">
+              <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Security Services</div>
+              <div style="font-size: 14px; font-weight: bold; color: #28a745;">${formatCompactPeso(summary.security_fee || 2500)}</div>
+              <div style="font-size: 7px; color: #666; margin-top: 3px;">Monthly</div>
+            </div>
+            
+            <!-- Maintenance Fee Card -->
+            <div style="background: #e8f4f8; padding: 12px; border-radius: 6px; text-align: center; border-left: 3px solid #17a2b8;">
+              <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Maintenance</div>
+              <div style="font-size: 14px; font-weight: bold; color: #17a2b8;">${formatCompactPeso(summary.maintenance_fee || 2000)}</div>
+              <div style="font-size: 7px; color: #666; margin-top: 3px;">Monthly</div>
+            </div>
+            
+            <!-- Amenities Fee Card -->
+            <div style="background: #fff3cd; padding: 12px; border-radius: 6px; text-align: center; border-left: 3px solid #ffc107;">
+              <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Amenities Access</div>
+              <div style="font-size: 14px; font-weight: bold; color: #856404;">${formatCompactPeso(summary.amenities_fee || 3000)}</div>
+              <div style="font-size: 7px; color: #666; margin-top: 3px;">Monthly</div>
+            </div>
+          </div>
+          
+          <!-- Total Expenses Card -->
+          <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #dee2e6; margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: 11px; color: #666; margin-bottom: 2px;">Total Monthly Expenses</div>
+                <div style="font-size: 13px; color: #333;">Rent + Security + Maintenance + Amenities</div>
+              </div>
+              <div style="font-size: 16px; font-weight: bold; color: #721c24;">
+                ${formatCompactPeso(summary.total_expenses || 7500)}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Expense Details Breakdown -->
+          <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #dee2e6;">
+            <h3 style="color: #6c757d; font-size: 12px; margin: 0 0 10px 0;">Expense Components Breakdown</h3>
+            
+            <!-- Security Details -->
+            <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #28a745;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 10px; color: #666; font-weight: bold;">Security Services (₱2,500)</span>
+                <span style="font-size: 10px; color: #28a745; font-weight: bold;">${formatCompactPeso(summary.security_fee || 2500)}</span>
+              </div>
+              <div style="font-size: 8px; color: #6c757d;">
+                • 24/7 Security Guard Coverage • CCTV Monitoring • Access Control • Fire Safety Equipment • Emergency Response
+              </div>
+            </div>
+            
+            <!-- Maintenance Details -->
+            <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #17a2b8;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 10px; color: #666; font-weight: bold;">Maintenance Services (₱2,000)</span>
+                <span style="font-size: 10px; color: #17a2b8; font-weight: bold;">${formatCompactPeso(summary.maintenance_fee || 2000)}</span>
+              </div>
+              <div style="font-size: 8px; color: #6c757d;">
+                • Garbage Collection & Disposal • Plumbing Maintenance • Electrical System Maintenance • Common Area Cleaning • HVAC Maintenance
+              </div>
+            </div>
+            
+            <!-- Amenities Details -->
+            <div style="padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #ffc107;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 10px; color: #666; font-weight: bold;">Amenities Access (₱3,000)</span>
+                <span style="font-size: 10px; color: #856404; font-weight: bold;">${formatCompactPeso(summary.amenities_fee || 3000)}</span>
+              </div>
+              <div style="font-size: 8px; color: #6c757d;">
+                • Parking Facility • Gym Access • Swimming Pool • Function Hall • Wi-Fi in Common Areas • Garden & Recreational Areas
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Ultra Compact Summary Cards -->
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px;">
           <div style="background: #e8f5e8; padding: 10px; border-radius: 6px; text-align: center; border-left: 3px solid #28a745;">
-            <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Paid</div>
+            <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Payments Made</div>
             <div style="font-size: 12px; font-weight: bold; color: #28a745;">${formatCompactPeso(summary.total_paid)}</div>
           </div>
           <div style="background: #fde8e8; padding: 10px; border-radius: 6px; text-align: center; border-left: 3px solid #dc3545;">
@@ -126,11 +220,11 @@ const UserDataView: React.FC = () => {
             <div style="font-size: 12px; font-weight: bold; color: #dc3545;">${formatCompactPeso(summary.total_unpaid)}</div>
           </div>
           <div style="background: #e8f4f8; padding: 10px; border-radius: 6px; text-align: center; border-left: 3px solid #344CB7;">
-            <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Expected</div>
+            <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Total Due</div>
             <div style="font-size: 12px; font-weight: bold; color: #344CB7;">${formatCompactPeso(summary.total_expected)}</div>
           </div>
           <div style="background: #fff3cd; padding: 10px; border-radius: 6px; text-align: center; border-left: 3px solid #ffc107;">
-            <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Completion</div>
+            <div style="font-size: 11px; color: #666; margin-bottom: 3px;">Payment %</div>
             <div style="font-size: 12px; font-weight: bold; color: #856404;">${summary.payment_completion}</div>
           </div>
         </div>
@@ -151,36 +245,44 @@ const UserDataView: React.FC = () => {
         <!-- Compact Monthly Breakdown -->
         <div style="margin-bottom: 15px;">
           <h2 style="color: #344CB7; border-bottom: 1px solid #344CB7; padding-bottom: 5px; font-size: 14px; margin-bottom: 10px;">
-            MONTHLY BREAKDOWN
+            MONTHLY PAYMENT BREAKDOWN
           </h2>
           <table style="width: 100%; border-collapse: collapse; font-size: 8px; margin-bottom: 10px;">
             <thead>
               <tr style="background: #344CB7; color: white;">
-                <th style="padding: 6px 4px; text-align: left; border: 1px solid #2a3d99; width: 18%;">Month</th>
-                <th style="padding: 6px 4px; text-align: right; border: 1px solid #2a3d99; width: 20%;">Paid</th>
-                <th style="padding: 6px 4px; text-align: right; border: 1px solid #2a3d99; width: 20%;">Outstanding</th>
-                <th style="padding: 6px 4px; text-align: right; border: 1px solid #2a3d99; width: 20%;">Expected</th>
-                <th style="padding: 6px 4px; text-align: center; border: 1px solid #2a3d99; width: 12%;">Bills</th>
+                <th style="padding: 6px 4px; text-align: left; border: 1px solid #2a3d99; width: 15%;">Month</th>
+                <th style="padding: 6px 4px; text-align: right; border: 1px solid #2a3d99; width: 18%;">Paid</th>
+                <th style="padding: 6px 4px; text-align: right; border: 1px solid #2a3d99; width: 18%;">Outstanding</th>
+                <th style="padding: 6px 4px; text-align: right; border: 1px solid #2a3d99; width: 18%;">Expected</th>
+                <th style="padding: 6px 4px; text-align: right; border: 1px solid #2a3d99; width: 18%;">Expenses</th>
+                <th style="padding: 6px 4px; text-align: center; border: 1px solid #2a3d99; width: 13%;">Bills</th>
               </tr>
             </thead>
             <tbody>
-              ${reportData.monthly_breakdown.map((month, index) => `
-                <tr style="${index % 2 === 0 ? 'background: #f8f9fa;' : 'background: white;'}">
-                  <td style="padding: 4px 3px; border: 1px solid #ddd; font-weight: bold; font-size: 7px;">${month.month.substring(0, 3)}</td>
-                  <td style="padding: 4px 3px; border: 1px solid #ddd; text-align: right; color: #28a745; font-weight: bold;">
-                    ${formatCompactPeso(month.amount_paid)}
-                  </td>
-                  <td style="padding: 4px 3px; border: 1px solid #ddd; text-align: right; color: #dc3545; font-weight: bold;">
-                    ${formatCompactPeso(month.amount_unpaid)}
-                  </td>
-                  <td style="padding: 4px 3px; border: 1px solid #ddd; text-align: right; font-weight: bold;">
-                    ${formatCompactPeso(month.amount_expected)}
-                  </td>
-                  <td style="padding: 4px 3px; border: 1px solid #ddd; text-align: center;">
-                    ${month.bill_count}
-                  </td>
-                </tr>
-              `).join('')}
+              ${reportData.monthly_breakdown.map((month, index) => {
+                // Calculate monthly expenses (assuming they're the same each month)
+                const monthlyExpenses = summary.total_expenses || 7500;
+                return `
+                  <tr style="${index % 2 === 0 ? 'background: #f8f9fa;' : 'background: white;'}">
+                    <td style="padding: 4px 3px; border: 1px solid #ddd; font-weight: bold; font-size: 7px;">${month.month.substring(0, 3)}</td>
+                    <td style="padding: 4px 3px; border: 1px solid #ddd; text-align: right; color: #28a745; font-weight: bold;">
+                      ${formatCompactPeso(month.amount_paid)}
+                    </td>
+                    <td style="padding: 4px 3px; border: 1px solid #ddd; text-align: right; color: #dc3545; font-weight: bold;">
+                      ${formatCompactPeso(month.amount_unpaid)}
+                    </td>
+                    <td style="padding: 4px 3px; border: 1px solid #ddd; text-align: right; font-weight: bold;">
+                      ${formatCompactPeso(month.amount_expected)}
+                    </td>
+                    <td style="padding: 4px 3px; border: 1px solid #ddd; text-align: right; color: #6c757d; font-weight: bold;">
+                      ${formatCompactPeso(monthlyExpenses)}
+                    </td>
+                    <td style="padding: 4px 3px; border: 1px solid #ddd; text-align: center;">
+                      ${month.bill_count}
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
             </tbody>
           </table>
         </div>
@@ -229,11 +331,60 @@ const UserDataView: React.FC = () => {
           </div>
         ` : ''}
 
+        <!-- Expense Package Summary -->
+        <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #dee2e6;">
+          <h3 style="color: #344CB7; font-size: 12px; margin: 0 0 10px 0;">EXPENSE PACKAGE INCLUSIONS</h3>
+          
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 8px;">
+            <!-- Security Package -->
+            <div style="background: white; padding: 8px; border-radius: 4px; border-left: 3px solid #28a745;">
+              <div style="font-weight: bold; color: #28a745; margin-bottom: 4px; font-size: 9px;">SECURITY (₱2,500)</div>
+              <div style="color: #666; line-height: 1.3;">
+                • 24/7 Security Guards<br>
+                • CCTV Surveillance<br>
+                • Access Control System<br>
+                • Fire Safety Equipment<br>
+                • Emergency Response<br>
+                • Visitor Management
+              </div>
+            </div>
+            
+            <!-- Maintenance Package -->
+            <div style="background: white; padding: 8px; border-radius: 4px; border-left: 3px solid #17a2b8;">
+              <div style="font-weight: bold; color: #17a2b8; margin-bottom: 4px; font-size: 9px;">MAINTENANCE (₱2,000)</div>
+              <div style="color: #666; line-height: 1.3;">
+                • Garbage Collection<br>
+                • Plumbing Repairs<br>
+                • Electrical Maintenance<br>
+                • Common Area Cleaning<br>
+                • HVAC Maintenance<br>
+                • Pest Control
+              </div>
+            </div>
+            
+            <!-- Amenities Package -->
+            <div style="background: white; padding: 8px; border-radius: 4px; border-left: 3px solid #ffc107;">
+              <div style="font-weight: bold; color: #856404; margin-bottom: 4px; font-size: 9px;">AMENITIES (₱3,000)</div>
+              <div style="color: #666; line-height: 1.3;">
+                • Parking Facility<br>
+                • Gym Access<br>
+                • Swimming Pool<br>
+                • Function Hall<br>
+                • Wi-Fi Areas<br>
+                • Garden Areas
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Ultra Compact Footer -->
         <div style="border-top: 1px solid #344CB7; padding-top: 10px; margin-top: 15px;">
           <div style="text-align: center; color: #666; font-size: 7px; line-height: 1.2;">
             <p style="margin: 2px 0;">Auto-generated statement for internal reference • All amounts in PHP (₱)</p>
             <p style="margin: 2px 0; font-weight: bold;">DOC-${reportData.user_id}-${reportData.year}-${Date.now().toString().slice(-6)}</p>
+            <p style="margin: 2px 0; color: #6c757d; font-size: 6px;">
+              *Monthly expenses include: Security (₱2,500), Maintenance (₱2,000), Amenities (₱3,000) = Total ₱7,500
+            </p>
           </div>
         </div>
       `;
