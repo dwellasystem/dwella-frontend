@@ -20,7 +20,7 @@ function Inquiries() {
       search: search,
       type: type,
     }
-  }, [search, type]);
+  }, [search, type, user?.id]);
   const {inquiries} = useInquiry(filters);
 
   return (
