@@ -112,10 +112,21 @@ function RouteComponent() {
 
     try {
       const data = convertFormDataToMultipart(formData);
+      // console.log(formData)
       await createNewInquiry(data, {'Content-Type': 'multipart/form-data'});
       
       // Reset form and navigate on success
-      setFormData(initialFormData);
+      // Reset form but keep resident value
+      setFormData({
+        ...initialFormData,
+        resident: user?.id, // Preserve resident
+        unit: undefined,    // Reset other fields
+        type: "",
+        title: "",
+        description: "",
+        photo: undefined,
+      });
+      
       setFormErrors(initialFormErrors);
       navigate({to:'/resident/inquiries'});
     } catch (error) {
@@ -127,6 +138,7 @@ function RouteComponent() {
   };
 
   const filter = useMemo(() => {
+     if (!user?.id) return null;
     return {
       assigned_by: user?.id
     }
