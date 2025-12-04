@@ -233,9 +233,15 @@ function CreateBill() {
             if (!validateForm()) {
                 return;
             }
+
+            // Convert amount_due to number with 2 decimal places
+            const payload = {
+                ...formData,
+                amount_due: parseFloat(parseFloat(formData.amount_due!.toString()).toFixed(2))
+            };
             
             setIsSubmitting(true);
-            await createNewMonthlyBill(formData);
+            await createNewMonthlyBill(payload);
             
             // Show success message
             setToastMessage("Bill created successfully!");

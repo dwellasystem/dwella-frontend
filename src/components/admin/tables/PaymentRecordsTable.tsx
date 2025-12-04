@@ -1,4 +1,4 @@
-import { Button, Col, Dropdown, Modal, Row, Table } from "react-bootstrap"
+import { Badge, Button, Col, Dropdown, Modal, Row, Table } from "react-bootstrap"
 import type { RecordPayments } from "../../../models/RecordPayment.model"
 import type { Paginated } from "../../../models/Paginated.model";
 import { formatDateToHumanReadable } from "../../../helpers/authHelper/dateHelper";
@@ -117,6 +117,24 @@ type Props = {
   onDelete: (id: number) => void;
 }
 
+// Helper function to get badge color based on payment status
+const getPaymentStatusBadgeColor = (status: string) => {
+  if (!status) return 'secondary';
+  
+  switch(status.toLowerCase()) {
+    case 'paid': return 'success';
+    case 'pending': return 'warning';
+    case 'rejected': return 'danger';
+    default: return 'secondary';
+  }
+};
+
+// Helper function to format status text
+const formatPaymentStatus = (status: string) => {
+  if (!status) return 'N/A';
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+};
+
 function PaymentRecordsTable({payments, prevButton, nextButton, pageNumber, onDelete, onUpdate}: Props) {
   return (
     <div className="w-100 d-flex flex-column gap-3 pt-3">
@@ -151,7 +169,13 @@ function PaymentRecordsTable({payments, prevButton, nextButton, pageNumber, onDe
                 </td>
                 <td>{paymentType(payment.payment_type)}</td>
                 <td>{payment.payment_method}</td>
-                <td>{payment.status}</td>
+                <td>
+                <Badge 
+                  bg={getPaymentStatusBadgeColor(payment.status)}
+                >
+                  {formatPaymentStatus(payment.status)}
+                </Badge>
+               </td>
                 <td>{payment.reference_number}</td>
                 <td className='text-start text-primary'>
                  {payment.proof_of_payment && <div onClick={() => window.open(`${payment.proof_of_payment}`, "_blank")} style={{cursor:"pointer"}}>

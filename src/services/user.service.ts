@@ -1,4 +1,4 @@
-import { USER_URLS } from '../api/endpoint'
+import { API_BASE_URL, USER_URLS } from '../api/endpoint'
 import api from '../api/api';
 import type { IServiceError } from '../interfaces/error-handlers/IServiceError';
 import type { User } from '../models/User.model';
@@ -10,7 +10,7 @@ const UserService = () => {
 
     const getPaginatedUsers = async (params?: {}) => {
         try{
-            const response = await api.get<Paginated<User>>(`https://dwella-backend.onrender.com/api/users-paginated`, {
+            const response = await api.get<Paginated<User>>(`${API_BASE_URL}/users-paginated`, {
                 params: params
             })
             return response;

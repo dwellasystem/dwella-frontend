@@ -7,6 +7,7 @@ export interface Inquiry extends BaseModel{
     unit: Unit;
     title: string;
     description: string;
+    photo: string;
     status: string;
     resident: User;
     type: string

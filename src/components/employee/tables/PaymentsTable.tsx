@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Col, Dropdown, Modal, Row, Table } from "react-bootstrap";
+import { Button, Col, Dropdown, Modal, Row, Table, Badge } from "react-bootstrap";
 import type { RecordPayments } from "../../../models/RecordPayment.model";
 import { formatDateToHumanReadable } from "../../../helpers/authHelper/dateHelper";
 import { PiReceiptDuotone } from "react-icons/pi";
@@ -22,21 +22,31 @@ function ViewModal({ payment, onDelete, onUpdate }: ViewModalProps) {
   const handleShow = () => setShow(true);
 
   const handleDelete = () => {
-  onDelete();     // delete record
-  setShow(false); // then close
-};
+    onDelete();     // delete record
+    setShow(false); // then close
+  };
 
   const handleConfirm = () => {
     onUpdate(payment.id, paymentStatus)
     handleClose();
   }
 
-    // Check if it's an advance payment
+  // Check if it's an advance payment
   const isAdvancePayment = payment.payment_type === 'advance';
+
+  // Function to get button variant based on status
+  const getStatusButtonVariant = (status: string) => {
+    switch(status?.toLowerCase()) {
+      case 'paid': return 'success';
+      case 'pending': return 'warning';
+      case 'rejected': return 'danger';
+      default: return 'secondary';
+    }
+  };
 
   return (
     <>
-      <a onClick={handleShow}>
+      <a onClick={handleShow} style={{ cursor: 'pointer' }}>
         View 
       </a>
       <Modal show={show} onHide={handleClose}>
@@ -62,9 +72,9 @@ function ViewModal({ payment, onDelete, onUpdate }: ViewModalProps) {
             </Col>
             <Col sm={12} md={6}>
               <label className="fw-semibold text-secondary" htmlFor="">Payment Status</label>
-               <Dropdown>
+              <Dropdown>
                 <Dropdown.Toggle
-                  variant={paymentStatus === 'pending' ? 'info' : paymentStatus === 'paid' ? 'success' : 'danger'}
+                  variant={getStatusButtonVariant(paymentStatus)}
                   className="text-white fw-bold" 
                   id="dropdown-basic">
                   {paymentStatus && paymentStatus.charAt(0).toUpperCase() + paymentStatus.slice(1)}
@@ -76,7 +86,6 @@ function ViewModal({ payment, onDelete, onUpdate }: ViewModalProps) {
                   <Dropdown.Item onClick={() => setPaymentStatus('rejected')}>Rejected</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              <p className="fw-bold"></p>
             </Col>
             <Col>
               <label className="fw-semibold text-secondary" htmlFor="">Bill Month</label>
@@ -123,10 +132,26 @@ type ResidentProps = {
 };
 
 const GetResidentName = ({user}: ResidentProps) => {
-
   return <>{user.first_name} {user.middle_name} {user.last_name}</>;
 }
 
+// Helper function to get badge color based on payment status
+const getPaymentStatusBadgeColor = (status: string) => {
+  if (!status) return 'secondary';
+  
+  switch(status.toLowerCase()) {
+    case 'paid': return 'success';
+    case 'pending': return 'warning';
+    case 'rejected': return 'danger';
+    default: return 'secondary';
+  }
+};
+
+// Helper function to format status text
+const formatPaymentStatus = (status: string) => {
+  if (!status) return 'N/A';
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+};
 
 type Props = {
   payments?: RecordPayments[];
@@ -135,7 +160,6 @@ type Props = {
 }
 
 function PaymentsTable(props: Props) {
-
   return (
     <div className="overflow-auto">
       <Table responsive={"sm"} className="table-bordered">
@@ -149,15 +173,17 @@ function PaymentsTable(props: Props) {
             <th style={{ backgroundColor: "#F2F2F7" }}>Payment Method</th>
             <th style={{ backgroundColor: "#F2F2F7" }}>Status</th>
             <th style={{ backgroundColor: "#F2F2F7" }}>Reference Number</th>
+            <th style={{backgroundColor:"#F2F2F7"}}>Proof Payment</th>
             <th style={{ backgroundColor: "#F2F2F7" }}>Action</th>
           </tr>
         </thead>
         <tbody>
-          {props.payments && props.payments?.map((payment: any) => (<tr key={payment.id} className="text-nowrap">
-            <td>{payment.unit}</td>
-            <td><GetResidentName user={payment.user}/></td>
-            <td>₱{payment.amount}</td>
-           <td>
+          {props.payments && props.payments?.map((payment: any) => (
+            <tr key={payment.id} className="text-nowrap">
+              <td>{payment.unit}</td>
+              <td><GetResidentName user={payment.user}/></td>
+              <td>₱{payment.amount}</td>
+              <td>
                 {payment.payment_type === 'regular' && payment.bill?.due_date && 
                   formatDateToHumanReadable(payment.bill.due_date)
                 }
@@ -165,20 +191,36 @@ function PaymentsTable(props: Props) {
                   `${formatDateToHumanReadable(payment.advance_start_date)} - ${formatDateToHumanReadable(payment.advance_end_date)}`
                 }
                 {!payment.bill?.due_date && !payment.advance_start_date && 'N/A'}
-            </td>
-            <td>{paymentType(payment.payment_type)}</td>
-            <td>{payment.payment_method}</td>
-            <td>{payment.status}</td>
-            <td>{payment.reference_number}</td>
-            {/* <td className="text-start text-primary" >{payment.proof_of_payment ? <div onClick={() => window.open(`${payment.proof_of_payment}`, "_blank")} style={{cursor: "pointer"}}>View Receipt</div> : null}</td> */}
-            <td className="text-start text-primary" style={{cursor: "pointer"}}>
-              <ViewModal
-                payment={payment}
-                onDelete={() => props.onDelete(payment.id)} 
-                onUpdate={props.onUpdate}/>
-            </td>
-          </tr>))}
-          {props.payments && props.payments.length < 1 && <tr><td colSpan={12} className="text-center">No Payment found.</td></tr>}
+              </td>
+              <td>{paymentType(payment.payment_type)}</td>
+              <td>{payment.payment_method}</td>
+              <td>
+                <Badge 
+                  bg={getPaymentStatusBadgeColor(payment.status)}
+                >
+                  {formatPaymentStatus(payment.status)}
+                </Badge>
+              </td>
+              <td>{payment.reference_number}</td>
+              <td className='text-start text-primary'>
+                 {payment.proof_of_payment && <div onClick={() => window.open(`${payment.proof_of_payment}`, "_blank")} style={{cursor:"pointer"}}>
+                    View Receipt
+                  </div>}
+              </td>
+              <td className="text-start text-primary" style={{cursor: "pointer"}}>
+                <ViewModal
+                  payment={payment}
+                  onDelete={() => props.onDelete(payment.id)} 
+                  onUpdate={props.onUpdate}
+                />
+              </td>
+            </tr>
+          ))}
+          {props.payments && props.payments.length < 1 && (
+            <tr>
+              <td colSpan={12} className="text-center">No Payment found.</td>
+            </tr>
+          )}
         </tbody>
       </Table>
     </div>
