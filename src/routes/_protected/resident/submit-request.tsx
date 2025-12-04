@@ -73,32 +73,36 @@ function RouteComponent() {
     return Object.keys(errors).length === 0;
   };
 
-  const convertFormDataToMultipart = (data: FormType) => {
-    const formData = new FormData();
+const convertFormDataToMultipart = (data: FormType) => {
+  const formData = new FormData();
 
-    Object.keys(data).forEach((key) => {
-      const value = data[key as keyof FormType];
-      if (value !== undefined && value !== null) {
-        // Handle file separately
-        if (key === 'photo' && value instanceof File) {
-          formData.append(key, value);
-        } 
-        // Handle other fields
-        else if (key !== 'photo' && value !== undefined && value !== null) {
-          formData.append(key, value.toString());
-        }
+  console.log("Converting form data:", data);
+
+  // Append all fields
+  Object.keys(data).forEach((key) => {
+    const value = data[key as keyof FormType];
+    if (value !== undefined && value !== null) {
+      if (key === 'photo' && value instanceof File) {
+        formData.append(key, value);
+        console.log(`Appended ${key}: [File] ${value.name}`);
+      } 
+      else if (key !== 'photo') {
+        formData.append(key, value.toString());
+        console.log(`Appended ${key}: ${value.toString()}`);
       }
-    });
-    
-    // Ensure all required fields are included
-    // formData.append('resident', data.resident?.toString() || '');
-    // formData.append('unit', data.unit?.toString() || '');
-    // formData.append('type', data.type || '');
-    // formData.append('title', data.title || '');
-    // formData.append('description', data.description || '');
-    
-    return formData;
-  };
+    } else {
+      console.log(`Skipped ${key}: value is ${value}`);
+    }
+  });
+  
+  // Debug: Show all FormData entries
+  console.log("FormData entries:");
+  for (let [key, val] of formData.entries()) {
+    console.log(key, val);
+  }
+  
+  return formData;
+};
 
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
