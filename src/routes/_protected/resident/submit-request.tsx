@@ -91,11 +91,11 @@ function RouteComponent() {
     });
     
     // Ensure all required fields are included
-    formData.append('resident', data.resident?.toString() || '');
-    formData.append('unit', data.unit?.toString() || '');
-    formData.append('type', data.type || '');
-    formData.append('title', data.title || '');
-    formData.append('description', data.description || '');
+    // formData.append('resident', data.resident?.toString() || '');
+    // formData.append('unit', data.unit?.toString() || '');
+    // formData.append('type', data.type || '');
+    // formData.append('title', data.title || '');
+    // formData.append('description', data.description || '');
     
     return formData;
   };
