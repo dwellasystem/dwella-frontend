@@ -15,7 +15,7 @@ interface AssignedUnitPopulated {
   unit_status: string;
 }
 
-export const useGetAssignedUnits = (filter?: {}) => {
+export const useGetAssignedUnits = (filter?: any) => {
     const [units, setUnits] = useState<AssignedUnitPopulated[]>();
     const {getAssigneUnits} = AssignedUnitService();
 
