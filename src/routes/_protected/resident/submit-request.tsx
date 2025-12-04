@@ -113,7 +113,6 @@ function RouteComponent() {
     try {
       const data = convertFormDataToMultipart(formData);
       await createNewInquiry(data, {'Content-Type': 'multipart/form-data'});
-      console.log("Form submitted successfully:", formData);
       
       // Reset form and navigate on success
       setFormData(initialFormData);

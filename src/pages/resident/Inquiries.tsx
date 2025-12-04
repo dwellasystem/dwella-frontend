@@ -8,14 +8,10 @@ import { useInquiry } from '../../hooks/inquiries/useInquiry'
 import { useMemo, useState } from 'react'
 
 function Inquiries() {
-  const {user, isLoading} = useAuth();
+  const {user} = useAuth();
 
   const [search, setSearch] = useState('');
   const [type, setType] = useState('');
-
-  if(isLoading || !user){
-    return <div>Loading...</div>
-  }
 
   // ✅ Memoize filters — prevents infinite fetching
   const filters = useMemo(() => {
