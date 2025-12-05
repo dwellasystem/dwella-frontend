@@ -60,60 +60,86 @@ function CreateBill() {
     }, []);
 
     const { usersAsOptions } = useGetUsers(filtersUsers);
-    const { units } = useGetAssignedUnits();
     const { createNewMonthlyBill } = useMonthlyBill();
     const [formData, setFormData] = useState<FormType>(initialFormState);
+    
+    const filterForUnits = useMemo(() => {
+        if (!formData.user_id) return null;
+        
+        return {
+            assigned_by: formData.user_id
+        }
+    }, [formData.user_id]);
 
-    // Filter units based on selected user
-    useEffect(() => {
-        if (formData.user_id) {
-            // Filter units where assigned_by.id matches the selected user_id
-            const userUnits = units?.filter(unit => 
-                unit.assigned_by.id === formData.user_id
-            ) || [];
-            
-            // Transform the data to include unit details
-            const transformedUnits = userUnits.map(unit => ({
-                id: unit.unit_id.id,
-                assigned_unit_id: unit.id, // Store the assigned unit ID for calculations
-                unit_name: unit.unit_id.unit_name,
-                building: unit.unit_id.building,
-                rent_amount: typeof unit.unit_id.rent_amount === 'string' 
-                ? parseFloat(unit.unit_id.rent_amount) 
-                : unit.unit_id.rent_amount,
-                // Additional charges flags from assigned unit
-                amenities: unit.amenities,
-                security: unit.security,
-                maintenance: unit.maintenance,
-                full_name: `${unit.unit_id.unit_name} (${unit.unit_id.building})`
-            }));
-            
-            setFilteredUnits(transformedUnits);
-            
-            // Get user's name for display
-            const selectedUser = usersAsOptions?.find(user => user.id === formData.user_id);
+    const { units, loading } = useGetAssignedUnits(filterForUnits);
+
+    // Handle user selection change
+    const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const userId = e.target.value ? Number(e.target.value) : undefined;
+        
+        // Clear previous states
+        setFormData(prev => ({
+            ...prev,
+            user_id: userId,
+            unit_id: undefined
+        }));
+        setSelectedUnitDetails(null);
+        setCalculatedAmount(0);
+        setBreakdown({
+            base_rent: 0,
+            amenities: 0,
+            security: 0,
+            maintenance: 0,
+            total: 0
+        });
+        setFilteredUnits([]);
+        
+        // Get user's name for display
+        if (userId) {
+            const selectedUser = usersAsOptions?.find(user => user.id === userId);
             if (selectedUser) {
                 setSelectedUserName(`${selectedUser.first_name} ${selectedUser.last_name}`);
-            } else {
-                setSelectedUserName("");
-            }
-            
-            // Auto-select unit if only one unit is associated
-            if (transformedUnits.length === 1) {
-                handleUnitSelection(transformedUnits[0]);
-            } else if (transformedUnits.length === 0) {
-                setFormData(prev => ({ ...prev, unit_id: undefined }));
-                setSelectedUnitDetails(null);
-                setToastMessage("This resident has no assigned units");
-                setToastVariant('danger');
-                setShowToast(true);
             }
         } else {
-            setFilteredUnits([]);
             setSelectedUserName("");
-            setSelectedUnitDetails(null);
         }
-    }, [formData.user_id, units, usersAsOptions]);
+    };
+
+    // Process units when they are loaded
+    useEffect(() => {
+        if (!formData.user_id || !units || loading) return;
+
+        // Filter units where assigned_by.id matches the selected user_id
+        const userUnits = units.filter(unit => 
+            unit.assigned_by.id === formData.user_id
+        ) || [];
+        
+        // Transform the data to include unit details
+        const transformedUnits = userUnits.map(unit => ({
+            id: unit.unit_id.id,
+            assigned_unit_id: unit.id,
+            unit_name: unit.unit_id.unit_name,
+            building: unit.unit_id.building,
+            rent_amount: typeof unit.unit_id.rent_amount === 'string' 
+            ? parseFloat(unit.unit_id.rent_amount) 
+            : unit.unit_id.rent_amount,
+            amenities: unit.amenities,
+            security: unit.security,
+            maintenance: unit.maintenance,
+            full_name: `${unit.unit_id.unit_name} (${unit.unit_id.building})`
+        }));
+        
+        setFilteredUnits(transformedUnits);
+        
+        // Auto-select unit if only one unit is associated
+        if (transformedUnits.length === 1) {
+            handleUnitSelection(transformedUnits[0]);
+        }
+        
+        // NOTE: We're NOT showing the toast here anymore
+        // It will only show when user tries to submit the form
+        
+    }, [units, loading, formData.user_id]);
 
     // Calculate amount when unit details change
     useEffect(() => {
@@ -130,7 +156,6 @@ function CreateBill() {
         let securityCharge = 0;
         let maintenanceCharge = 0;
 
-        // Calculate additional charges based on assigned unit settings
         if (selectedUnitDetails.amenities) {
             amenitiesCharge = ADDITIONAL_CHARGES.AMENITIES;
         }
@@ -153,7 +178,6 @@ function CreateBill() {
 
         setCalculatedAmount(total);
         
-        // Auto-fill the amount field with calculated total
         setFormData(prev => ({
             ...prev,
             amount_due: total
@@ -175,7 +199,6 @@ function CreateBill() {
         if (selectedUnit) {
             handleUnitSelection(selectedUnit);
         } else {
-            // Clear if no unit selected
             setFormData(prev => ({ 
                 ...prev, 
                 unit_id: undefined 
@@ -200,7 +223,12 @@ function CreateBill() {
             return false;
         }
         if (!formData.unit_id || formData.unit_id <= 0) {
-            setToastMessage("Please select a unit");
+            // Check if the user has no assigned units
+            if (formData.user_id && !loading && filteredUnits.length === 0) {
+                setToastMessage("This resident has no assigned units. Please assign a unit first.");
+            } else {
+                setToastMessage("Please select a unit");
+            }
             setToastVariant('danger');
             setShowToast(true);
             return false;
@@ -234,7 +262,6 @@ function CreateBill() {
                 return;
             }
 
-            // Convert amount_due to number with 2 decimal places
             const payload = {
                 ...formData,
                 amount_due: parseFloat(parseFloat(formData.amount_due!.toString()).toFixed(2))
@@ -243,18 +270,15 @@ function CreateBill() {
             setIsSubmitting(true);
             await createNewMonthlyBill(payload);
             
-            // Show success message
             setToastMessage("Bill created successfully!");
             setToastVariant('success');
             setShowToast(true);
 
-            // Wait a moment for the user to see the success message, then navigate
             setTimeout(() => {
                 navigate({ to: `/${role}/monthly-bill` });
             }, 2000);
         } catch (error: any) {
             console.log(error);
-            // Handle API errors
             const errorMessage = error.data?.non_field_errors?.[0] ||
                 error.data?.detail ||
                 "An error occurred while creating the bill";
@@ -265,24 +289,6 @@ function CreateBill() {
         } finally {
             setIsSubmitting(false);
         }
-    };
-
-    const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const userId = e.target.value ? Number(e.target.value) : undefined;
-        setFormData(prev => ({
-            ...prev,
-            user_id: userId,
-            unit_id: undefined // Reset unit when user changes
-        }));
-        setSelectedUnitDetails(null);
-        setCalculatedAmount(0);
-        setBreakdown({
-            base_rent: 0,
-            amenities: 0,
-            security: 0,
-            maintenance: 0,
-            total: 0
-        });
     };
 
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -298,7 +304,6 @@ function CreateBill() {
             className="pt-5 d-flex flex-column w-100"
             style={{ maxWidth: "70rem" }}
         >
-            {/* Toast Container */}
             <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
                 <Toast
                     show={showToast}
@@ -318,14 +323,12 @@ function CreateBill() {
                 </Toast>
             </ToastContainer>
 
-            {/* Header component*/}
             <Header path={"admin"}>
                 <div className="d-flex gap-3">
                     <h3 className="fw-bold">Create New Bill</h3>
                 </div>
             </Header>
 
-            {/* Form page heading */}
             <div className="d-flex align-items-center gap-1 pt-5 mb-3">
                 <span className="text-muted fw-bold d-flex align-items-center">
                     Monthly Bill
@@ -336,7 +339,6 @@ function CreateBill() {
                 </span>
             </div>
 
-            {/* Add Resident Form */}
             <Form
                 onSubmit={createNewBill}
                 className="p-5 rounded-3 mb-5"
@@ -344,7 +346,6 @@ function CreateBill() {
             >
                 <h3>Details</h3>
                 <Row className="pt-3">
-                    {/* Resident Selection */}
                     <Col xs={12} md={6}>
                         <Form.Group className="mb-3" controlId="formResident">
                             <Form.Label>Resident</Form.Label>
@@ -368,30 +369,31 @@ function CreateBill() {
                         </Form.Group>
                     </Col>
 
-                    {/* Units - Filtered based on selected resident */}
                     <Col xs={12} md={6}>
                         <Form.Group className="mb-3" controlId="formUnit">
                             <Form.Label>Assigned Unit</Form.Label>
                             <Form.Select
                                 value={formData.unit_id || ''}
                                 onChange={handleUnitChange}
-                                disabled={!formData.user_id || filteredUnits.length === 0}
+                                disabled={!formData.user_id || loading}
                                 required
                             >
                                 <option value="">
                                     {!formData.user_id
                                         ? "Select a resident first"
-                                        : filteredUnits.length === 0
-                                            ? "No units assigned to this resident"
-                                            : "Select unit"}
+                                        : loading
+                                            ? "Loading units..."
+                                            : filteredUnits.length === 0
+                                                ? "No units assigned to this resident"
+                                                : "Select unit"}
                                 </option>
-                                {filteredUnits?.map((unit) => (
+                                {!loading && filteredUnits?.map((unit) => (
                                     <option key={unit.id} value={unit.id}>
                                         {unit.unit_name} ({unit.building})
                                     </option>
                                 ))}
                             </Form.Select>
-                            {formData.user_id && filteredUnits.length === 0 && (
+                            {formData.user_id && !loading && filteredUnits.length === 0 && (
                                 <Form.Text className="text-danger">
                                     This resident has no assigned units. Please assign a unit first.
                                 </Form.Text>
@@ -399,7 +401,6 @@ function CreateBill() {
                         </Form.Group>
                     </Col>
 
-                    {/* Amount Due - Auto-calculated but editable */}
                     <Col xs={12} md={6}>
                         <Form.Group className="mb-3" controlId="formAmountDue">
                             <Form.Label>Amount Due</Form.Label>
@@ -411,6 +412,7 @@ function CreateBill() {
                                 min="1"
                                 step="0.01"
                                 placeholder="Auto-calculated amount"
+                                disabled={!selectedUnitDetails}
                             />
                             {selectedUnitDetails && (
                                 <Form.Text className="text-muted">
@@ -425,7 +427,6 @@ function CreateBill() {
                         </Form.Group>
                     </Col>
 
-                    {/* Due Date */}
                     <Col xs={12} md={6}>
                         <Form.Group className="mb-3" controlId="formDueDate">
                             <Form.Label>Due Date</Form.Label>
@@ -438,7 +439,6 @@ function CreateBill() {
                         </Form.Group>
                     </Col>
 
-                    {/* Payment status */}
                     <Col xs={12} md={6}>
                         <Form.Group className="mb-3" controlId="formPaymentStatus">
                             <Form.Label>Payment Status</Form.Label>
@@ -454,7 +454,6 @@ function CreateBill() {
                         </Form.Group>
                     </Col>
 
-                    {/* Amount Breakdown (Visible when unit is selected) */}
                     {selectedUnitDetails && (
                         <Col xs={12}>
                             <div className="p-3 border rounded mb-3" style={{ backgroundColor: '#f8f9fa' }}>

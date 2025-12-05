@@ -18,10 +18,18 @@ interface AssignedUnitPopulated {
 export const useGetAssignedUnits = (filter?: any) => {
     const [units, setUnits] = useState<AssignedUnitPopulated[]>();
     const {getAssigneUnits} = AssignedUnitService();
+     const [loading, setLoading] = useState(false);
 
     const fetchUnits = async () => {
-        const response = await getAssigneUnits(filter);
-        setUnits(response.data)
+        try {
+            const response = await getAssigneUnits(filter);
+            setUnits(response.data)
+        } catch (error) {
+            console.error("Error fetching assigned units:", error);
+            setUnits([]);
+        }finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -35,5 +43,6 @@ export const useGetAssignedUnits = (filter?: any) => {
 
     return {
         units,
+        loading
     } 
 }
