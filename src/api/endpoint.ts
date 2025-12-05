@@ -24,9 +24,9 @@ export const AUTH_URLS: IAuthUrls = {
 export const USER_URLS: IUserUrls = {
   GET_USERS: `users`,
   CREATE_USER: `register/`,
-  GET_USER_BY_ID: (id:number | string) => `/user/${id}/`,
-  UPDATE_USER_BY_ID: (id: number | string) => `/user/update/${id}/`,
-  DELETE_USER_BY_ID: (id: number | string) => `/user/delete/${id}/`,
+  GET_USER_BY_ID: (id:number | string) => `${API_BASE_URL}/user/${id}/`,
+  UPDATE_USER_BY_ID: (id: number | string) => `${API_BASE_URL}/user/update/${id}/`,
+  DELETE_USER_BY_ID: (id: number | string) => `${API_BASE_URL}/user/delete/${id}/`,
 }
 
 

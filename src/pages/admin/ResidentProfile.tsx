@@ -21,8 +21,8 @@ function ResidentProfile(props:ResidentProps) {
   const [user, setuser] = useState<User | undefined>(undefined)
 
    const navigate = useNavigate();
-
-   if (!user) return <h1>Loading...</h1>
+   
+   console.log("Fetch User Data:", fetchUser); // Add this for debugging
 
   useEffect(() => {
     if(fetchUser){
@@ -31,6 +31,7 @@ function ResidentProfile(props:ResidentProps) {
   },[fetchUser])
 
   const handNavigate = () => {
+    if(!user) return
       switch(adminEmployee?.role) {
         case 'admin':
           return navigate({to: `/admin/resident/$residentId/edit`, params: {residentId: user.id!.toString()}});
@@ -41,6 +42,9 @@ function ResidentProfile(props:ResidentProps) {
 
   if(loading) return <h1>Loading...</h1>
   if(error) return <h1>Naay error..</h1>
+
+    // Check after loading is complete
+  if(!user) return <h1>User not found</h1>
 
 
   return (
