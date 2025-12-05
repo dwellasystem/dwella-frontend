@@ -50,28 +50,28 @@ function RouteComponent() {
   const [formErrors, setFormErrors] = useState<FormErrors>(initialFormErrors);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const validateForm = (): boolean => {
-    const errors: FormErrors = {};
+  // const validateForm = (): boolean => {
+  //   const errors: FormErrors = {};
     
-    if (!formData.unit) {
-      errors.unit = "Unit number is required";
-    }
+  //   if (!formData.unit) {
+  //     errors.unit = "Unit number is required";
+  //   }
     
-    if (!formData.type.trim()) {
-      errors.type = "Type is required";
-    }
+  //   if (!formData.type.trim()) {
+  //     errors.type = "Type is required";
+  //   }
     
-    if (!formData.title.trim()) {
-      errors.title = "Title is required";
-    }
+  //   if (!formData.title.trim()) {
+  //     errors.title = "Title is required";
+  //   }
     
-    if (!formData.description.trim()) {
-      errors.description = "Description is required";
-    }
+  //   if (!formData.description.trim()) {
+  //     errors.description = "Description is required";
+  //   }
 
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+  //   setFormErrors(errors);
+  //   return Object.keys(errors).length === 0;
+  // };
 
 const convertFormDataToMultipart = (data: FormType) => {
   const formData = new FormData();
