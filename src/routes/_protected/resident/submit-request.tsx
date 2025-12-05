@@ -105,41 +105,46 @@ const convertFormDataToMultipart = (data: FormType) => {
 };
 
   const submitForm = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validate form before submission
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const data = convertFormDataToMultipart(formData);
-      // console.log(formData)
-      await createNewInquiry(data, {'Content-Type': 'multipart/form-data'});
-      
-      // Reset form and navigate on success
-      // Reset form but keep resident value
-      setFormData({
-        ...initialFormData,
-        resident: user?.id, // Preserve resident
-        unit: undefined,    // Reset other fields
-        type: "",
-        title: "",
-        description: "",
-        photo: undefined,
-      });
-      
-      setFormErrors(initialFormErrors);
-      navigate({to:'/resident/inquiries'});
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      // Optionally set error state for user feedback
-    } finally {
-      setIsSubmitting(false);
-    }
+  e.preventDefault();
+  
+  // Create data with guaranteed resident
+  const dataToSend = {
+    ...formData,
+    resident: formData.resident || user?.id
   };
+  
+  // Validate with the guaranteed data
+  const errors: FormErrors = {};
+  if (!dataToSend.unit) errors.unit = "Unit number is required";
+  if (!dataToSend.type.trim()) errors.type = "Type is required";
+  if (!dataToSend.title.trim()) errors.title = "Title is required";
+  if (!dataToSend.description.trim()) errors.description = "Description is required";
+
+  if (Object.keys(errors).length > 0) {
+    setFormErrors(errors);
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    console.log("Data being sent:", dataToSend);
+    const data = convertFormDataToMultipart(dataToSend);
+    await createNewInquiry(data, {'Content-Type': 'multipart/form-data'});
+    
+    // Reset form with current user
+    setFormData({
+      ...initialFormData,
+      resident: user?.id
+    });
+    setFormErrors(initialFormErrors);
+    navigate({to:'/resident/inquiries'});
+  } catch (error) {
+    console.error("Error submitting form:", error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const filter = useMemo(() => {
      if (!user?.id) return null;

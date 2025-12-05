@@ -25,6 +25,11 @@ export const useGetAssignedUnits = (filter?: any) => {
     }
 
     useEffect(() => {
+         // CRITICAL: Don't fetch if filter doesn't have assigned_by
+        if (!filter || filter.assigned_by === undefined || filter.assigned_by === null) {
+            setUnits([]); // Clear any previous units
+            return;
+        }
         fetchUnits();
     }, [filter])
 
