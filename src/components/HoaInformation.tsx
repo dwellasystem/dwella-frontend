@@ -330,26 +330,68 @@ const HoaInformation = () => {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>Additional Payment Methods</Form.Label>
-                  <Form.Select 
-                    name="additional_payment_method_ids"
-                    multiple
-                    value={formData.additional_payment_methods?.map(m => m.id.toString()) || []}
-                    onChange={handleInputChange}
-                    size={'lg'}
-                  >
-                    {activePaymentMethods.map(method => (
-                      <option 
-                        key={method.id} 
-                        value={method.id}
-                        disabled={method.id === formData.primary_payment_method?.id}
-                      >
-                        {method.name} {method.account_number ? `(${method.account_number})` : ''}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  <Form.Text className="text-muted">
-                    Hold Ctrl/Cmd to select multiple methods
-                  </Form.Text>
+                  {isEditing ? (
+                    <Form.Select 
+                      name="additional_payment_method_ids"
+                      multiple
+                      value={formData.additional_payment_methods?.map(m => m.id.toString()) || []}
+                      onChange={(e) => {
+                        const selectedOptions = Array.from(e.target.selectedOptions, option => 
+                          Number(option.value)
+                        );
+                        
+                        // Find the corresponding payment method objects
+                        const selectedMethods = activePaymentMethods.filter(method => 
+                          selectedOptions.includes(method.id)
+                        );
+                        
+                        setFormData(prev => ({
+                          ...prev,
+                          additional_payment_methods: selectedMethods
+                        }));
+                      }}
+                      size={'lg'} // Adjust size based on options
+                      className="overflow-auto"
+                    >
+                      {activePaymentMethods.map(method => (
+                        <option 
+                          key={method.id} 
+                          value={method.id}
+                          disabled={method.id === formData.primary_payment_method?.id}
+                        >
+                          {method.name} {method.account_number ? `(${method.account_number})` : ''}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  ) : (
+                    <div>
+                      {hoaInfo?.additional_payment_methods && hoaInfo.additional_payment_methods.length > 0 ? (
+                        <div className="d-flex flex-wrap gap-2">
+                          {hoaInfo.additional_payment_methods.map(method => (
+                            <Badge 
+                              key={method.id} 
+                              bg="secondary" 
+                              className="p-2 d-flex align-items-center gap-1"
+                            >
+                              {method.name}
+                              {method.account_number && (
+                                <small className="ms-1">({method.account_number})</small>
+                              )}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <Alert variant="info" className="mb-0">
+                          No additional payment methods configured
+                        </Alert>
+                      )}
+                    </div>
+                  )}
+                  {isEditing && (
+                    <Form.Text className="text-muted">
+                      Hold Ctrl/Cmd to select multiple methods
+                    </Form.Text>
+                  )}
                 </Form.Group>
               </Col>
             </Row>

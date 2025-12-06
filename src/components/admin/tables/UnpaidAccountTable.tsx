@@ -123,6 +123,7 @@ function UnpaidAccountTable({unpaidAccounts, deleteBill}: Props) {
                 <th style={{ backgroundColor: "#F2F2F7" }}>Unit Number</th>
                 <th style={{ backgroundColor: "#F2F2F7" }}>Resident Name</th>
                 <th style={{ backgroundColor: "#F2F2F7" }}>Amount Due</th>
+                {/* <th style={{ backgroundColor: "#F2F2F7" }}>Construction Bond</th> */}
                 <th style={{ backgroundColor: "#F2F2F7" }}>Payment Status</th>
                 <th style={{ backgroundColor: "#F2F2F7" }}>Due Date</th>
                 <th style={{ backgroundColor: "#F2F2F7" }}>Actions</th>
@@ -135,6 +136,7 @@ function UnpaidAccountTable({unpaidAccounts, deleteBill}: Props) {
                   <td>{row.unit.unit_name}</td>
                   <td>{row.user.first_name} {row.user.middle_name} {row.user.last_name}</td>
                   <td>₱{row.amount_due}</td>
+                  {/* <td>₱{row.construction_bond}</td> */}
                   <td>
                     <span className={`badge ${row.due_status === 'overdue' ? 'bg-danger' : row.due_status === 'due_today' ? 'bg-warning' : row.due_status === 'upcoming' ? 'bg-info' : 'bg-success'}`}>
                       {row.due_status.charAt(0).toUpperCase() + row.due_status.slice(1).replace('_', ' ')}

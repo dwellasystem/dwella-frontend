@@ -11,4 +11,5 @@ export interface MonthlyBill {
   payment_status: string;
   due_status: string;
   created_at: string;
+  construction_bond: string;
 }

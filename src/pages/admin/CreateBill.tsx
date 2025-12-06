@@ -15,6 +15,7 @@ type FormType = {
     amount_due: number | undefined,
     due_date: string,
     payment_status: string | undefined,
+    construction_bond: number | undefined, // New field for construction bond
 }
 
 const initialFormState: FormType = {
@@ -23,6 +24,7 @@ const initialFormState: FormType = {
     amount_due: undefined,
     due_date: "",
     payment_status: undefined,
+    construction_bond: undefined,
 }
 
 // Additional charges constants (same as in your backend)
@@ -40,11 +42,13 @@ function CreateBill() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedUnitDetails, setSelectedUnitDetails] = useState<any>(null);
     const [calculatedAmount, setCalculatedAmount] = useState<number>(0);
+    const [totalAmountWithBond, setTotalAmountWithBond] = useState<number>(0);
     const [breakdown, setBreakdown] = useState({
         base_rent: 0,
         amenities: 0,
         security: 0,
         maintenance: 0,
+        construction_bond: 0,
         total: 0
     });
     
@@ -78,18 +82,19 @@ function CreateBill() {
         const userId = e.target.value ? Number(e.target.value) : undefined;
         
         // Clear previous states
-        setFormData(prev => ({
-            ...prev,
-            user_id: userId,
-            unit_id: undefined
+        setFormData(() => ({
+            ...initialFormState,
+            user_id: userId
         }));
         setSelectedUnitDetails(null);
         setCalculatedAmount(0);
+        setTotalAmountWithBond(0);
         setBreakdown({
             base_rent: 0,
             amenities: 0,
             security: 0,
             maintenance: 0,
+            construction_bond: 0,
             total: 0
         });
         setFilteredUnits([]);
@@ -136,22 +141,20 @@ function CreateBill() {
             handleUnitSelection(transformedUnits[0]);
         }
         
-        // NOTE: We're NOT showing the toast here anymore
-        // It will only show when user tries to submit the form
-        
     }, [units, loading, formData.user_id]);
 
-    // Calculate amount when unit details change
+    // Calculate amount when unit details or bond changes
     useEffect(() => {
         if (selectedUnitDetails) {
             calculateTotalAmount();
         }
-    }, [selectedUnitDetails]);
+    }, [selectedUnitDetails, formData.construction_bond]);
 
     const calculateTotalAmount = () => {
         if (!selectedUnitDetails) return;
 
         const baseRent = selectedUnitDetails.rent_amount;
+        const constructionBond = formData.construction_bond || 0;
         let amenitiesCharge = 0;
         let securityCharge = 0;
         let maintenanceCharge = 0;
@@ -166,21 +169,25 @@ function CreateBill() {
             maintenanceCharge = ADDITIONAL_CHARGES.MAINTENANCE;
         }
 
-        const total = baseRent + amenitiesCharge + securityCharge + maintenanceCharge;
+        const serviceTotal = baseRent + amenitiesCharge + securityCharge + maintenanceCharge;
+        const totalWithBond = serviceTotal + constructionBond;
 
         setBreakdown({
             base_rent: baseRent,
             amenities: amenitiesCharge,
             security: securityCharge,
             maintenance: maintenanceCharge,
-            total: total
+            construction_bond: constructionBond,
+            total: totalWithBond
         });
 
-        setCalculatedAmount(total);
+        setCalculatedAmount(serviceTotal);
+        setTotalAmountWithBond(totalWithBond);
         
+        // Set the amount_due to the total without bond (for backward compatibility)
         setFormData(prev => ({
             ...prev,
-            amount_due: total
+            amount_due: serviceTotal
         }));
     };
 
@@ -188,7 +195,8 @@ function CreateBill() {
         setSelectedUnitDetails(unit);
         setFormData(prev => ({ 
             ...prev, 
-            unit_id: unit.id 
+            unit_id: unit.id,
+            construction_bond: 0 // Reset bond when unit changes
         }));
     };
 
@@ -200,19 +208,29 @@ function CreateBill() {
             handleUnitSelection(selectedUnit);
         } else {
             setFormData(prev => ({ 
-                ...prev, 
-                unit_id: undefined 
+                ...initialFormState,
+                user_id: prev.user_id
             }));
             setSelectedUnitDetails(null);
             setCalculatedAmount(0);
+            setTotalAmountWithBond(0);
             setBreakdown({
                 base_rent: 0,
                 amenities: 0,
                 security: 0,
                 maintenance: 0,
+                construction_bond: 0,
                 total: 0
             });
         }
+    };
+
+    const handleConstructionBondChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value ? Number(e.target.value) : undefined;
+        setFormData(prev => ({
+            ...prev,
+            construction_bond: value
+        }));
     };
 
     const validateForm = () => {
@@ -235,6 +253,12 @@ function CreateBill() {
         }
         if (!formData.amount_due || formData.amount_due <= 0) {
             setToastMessage("Amount must be a positive number");
+            setToastVariant('danger');
+            setShowToast(true);
+            return false;
+        }
+        if (formData.construction_bond && formData.construction_bond < 0) {
+            setToastMessage("Construction bond cannot be negative");
             setToastVariant('danger');
             setShowToast(true);
             return false;
@@ -263,8 +287,14 @@ function CreateBill() {
             }
 
             const payload = {
-                ...formData,
-                amount_due: parseFloat(parseFloat(formData.amount_due!.toString()).toFixed(2))
+                user_id: formData.user_id,
+                unit_id: formData.unit_id,
+                amount_due: parseFloat(parseFloat(formData.amount_due!.toString()).toFixed(2)),
+                construction_bond: formData.construction_bond ? 
+                    parseFloat(parseFloat(formData.construction_bond.toString()).toFixed(2)) : 
+                    0.00,
+                due_date: formData.due_date,
+                payment_status: formData.payment_status
             };
             
             setIsSubmitting(true);
@@ -403,7 +433,7 @@ function CreateBill() {
 
                     <Col xs={12} md={6}>
                         <Form.Group className="mb-3" controlId="formAmountDue">
-                            <Form.Label>Amount Due</Form.Label>
+                            <Form.Label>Monthly Rent & Services</Form.Label>
                             <Form.Control
                                 value={formData.amount_due || ''}
                                 onChange={handleAmountChange}
@@ -424,6 +454,26 @@ function CreateBill() {
                                     )}
                                 </Form.Text>
                             )}
+                        </Form.Group>
+                    </Col>
+
+                    <Col xs={12} md={6}>
+                        <Form.Group className="mb-3" controlId="formConstructionBond">
+                            <Form.Label>
+                                Construction Bond{" "}
+                                <span className="text-muted small">(Optional)</span>
+                            </Form.Label>
+                            <Form.Control
+                                value={formData.construction_bond || ''}
+                                onChange={handleConstructionBondChange}
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="Enter construction bond amount"
+                            />
+                            <Form.Text className="text-muted">
+                                Construction bond for unit reconstruction/renovation
+                            </Form.Text>
                         </Form.Group>
                     </Col>
 
@@ -482,13 +532,29 @@ function CreateBill() {
                                                 <span className="text-success">+ ₱{breakdown.maintenance.toFixed(2)}</span>
                                             </div>
                                         )}
+                                        {(formData.construction_bond || 0) > 0 && (
+                                            <div className="d-flex justify-content-between mb-1">
+                                                <span>Construction Bond:</span>
+                                                <span className="text-warning">+ ₱{breakdown.construction_bond.toFixed(2)}</span>
+                                            </div>
+                                        )}
                                     </Col>
                                     <Col xs={12} md={6}>
                                         <div className="border-top pt-2 mt-2">
                                             <div className="d-flex justify-content-between">
-                                                <span className="fw-bold">Total:</span>
-                                                <span className="fw-bold text-primary">₱{breakdown.total.toFixed(2)}</span>
+                                                <span className="fw-bold">Total Amount Due:</span>
+                                                <span className="fw-bold text-primary">₱{totalAmountWithBond.toFixed(2)}</span>
                                             </div>
+                                            <div className="d-flex justify-content-between small text-muted mt-1">
+                                                <span>Services Total:</span>
+                                                <span>₱{calculatedAmount.toFixed(2)}</span>
+                                            </div>
+                                            {(formData.construction_bond || 0) > 0 && (
+                                                <div className="d-flex justify-content-between small text-muted">
+                                                    <span>Construction Bond:</span>
+                                                    <span>₱{breakdown.construction_bond.toFixed(2)}</span>
+                                                </div>
+                                            )}
                                         </div>
                                     </Col>
                                 </Row>
@@ -498,6 +564,7 @@ function CreateBill() {
                                         {selectedUnitDetails.amenities && "✓ Amenities "}
                                         {selectedUnitDetails.security && "✓ Security "}
                                         {selectedUnitDetails.maintenance && "✓ Maintenance"}
+                                        {(formData.construction_bond || 0) > 0 && " ✓ Construction Bond"}
                                     </div>
                                 </div>
                             </div>
