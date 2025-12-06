@@ -43,7 +43,7 @@ function UnitListTable({units, updateUnit, deleteUnit}: Props) {
               <th style={{ backgroundColor: "#F2F2F7" }}>Bedrooms</th>
               <th style={{ backgroundColor: "#F2F2F7" }}>Floor Area</th>
               <th style={{ backgroundColor: "#F2F2F7" }}>Rent Amount</th>
-              <th style={{ backgroundColor: "#F2F2F7" }}>Available</th>
+              <th style={{ backgroundColor: "#F2F2F7" }}>Status</th>
               <th style={{ backgroundColor: "#F2F2F7" }}>Actions</th>
             </tr>
           </thead>
@@ -54,7 +54,7 @@ function UnitListTable({units, updateUnit, deleteUnit}: Props) {
                 <td>{unit.bedrooms}</td>
                 <td>{unit.floor_area}.sqm</td>
                 <td>{unit.rent_amount}</td>
-                <td>{unit.isAvailable ? 'Available' : 'Occupied'}</td>
+                <td>{unit.isAvailable ? 'Available' : 'Sold'}</td>
                 <td className='d-flex align-items-center justify-content-center gap-2'>
                     <OverlayTrigger
                       placement={'top'}
