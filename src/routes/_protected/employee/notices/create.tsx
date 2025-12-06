@@ -4,7 +4,8 @@ import { useState, type FormEvent } from "react";
 // import { useGetUnits } from "../../../../hooks/unit/useGetUnits";
 import { useNotices } from "../../../../hooks/notices/useNotices";
 import { useNoticeType } from "../../../../hooks/notices/useNoticeType";
-import { useGetAssignedUnits } from "../../../../hooks/assigned-unit/useGetAssignedUnits";
+// import { useGetAssignedUnits } from "../../../../hooks/assigned-unit/useGetAssignedUnits";
+import { useAssignedUnitOptions } from "../../../../hooks/assigned-unit/useAssignedUnitOptions";
 
 interface initialFormDataType {
   title: string;
@@ -29,7 +30,7 @@ function RouteComponent() {
   const [allChecked, setAllChecked] = useState(false);
 
   // const { units } = useGetUnits();
-  const {units: assignedUnit} = useGetAssignedUnits();
+  const {units: assignedUnit} = useAssignedUnitOptions();
   const { createNewNotice } = useNotices();
   const { noticeTypes } = useNoticeType();
 

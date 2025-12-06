@@ -118,7 +118,7 @@ function CreateNotice({formData,noticeTypes, setFormData, units,title, allChecke
                   key={unit.id}
                   type="checkbox"
                   id={`checkbox-${unit.id}`}
-                  label={unit.unit_id.unit_name}
+                  label={unit.unit_id.unit_name + "-" + unit.unit_id.building}
                   checked={allChecked || formData.target_audience?.includes(Number(unit.id))} // if allChecked true -> all checked
                   onChange={() => handleUnitChange(Number(unit.id))}
                 />
