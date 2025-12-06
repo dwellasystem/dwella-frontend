@@ -289,7 +289,7 @@ function CreateBill() {
             const payload = {
                 user_id: formData.user_id,
                 unit_id: formData.unit_id,
-                amount_due: parseFloat(parseFloat(formData.amount_due!.toString()).toFixed(2)),
+                amount_due: parseFloat(parseFloat((formData.amount_due! + formData.construction_bond!)!.toString()).toFixed(2)),
                 construction_bond: formData.construction_bond ? 
                     parseFloat(parseFloat(formData.construction_bond.toString()).toFixed(2)) : 
                     0.00,
@@ -433,7 +433,7 @@ function CreateBill() {
 
                     <Col xs={12} md={6}>
                         <Form.Group className="mb-3" controlId="formAmountDue">
-                            <Form.Label>Monthly Rent & Services</Form.Label>
+                            <Form.Label>Amount</Form.Label>
                             <Form.Control
                                 value={formData.amount_due || ''}
                                 onChange={handleAmountChange}
