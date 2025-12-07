@@ -653,7 +653,7 @@ function UploadPayment() {
             <Row className='mt-4'>
               <Col className='d-flex gap-3 flex-wrap align-items-center justify-content-end'>
                 <div 
-                  onClick={() => navigate({ to: '/resident/financial' })} 
+                  onClick={() => navigate({ to: '/resident/dashboard' })} 
                   className='d-flex flex-grow-1 flex-sm-grow-0 align-items-center justify-content-center px-5 py-3 rounded-3' 
                   style={{ backgroundColor: "#CED4F5", cursor: "pointer" }}
                 >
