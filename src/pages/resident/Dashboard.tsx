@@ -21,22 +21,29 @@ function Dashboard() {
   const [selectedNotice, setSelectedNotice] = useState<NoticeDetail | null>(null);
   const navigate = useNavigate();
 
-  const { payments } = usePayments();
-
-    // Filter payments client-side
-  const filteredPayments = useMemo(() => {
-    if (!payments?.results || !user?.id) return payments;
-    
-    const filteredResults = payments.results.filter(
-      payment => payment.user.id === user.id
-    );
-    
+  const filter = useMemo(() => {
+    if (!user?.id) return {};
     return {
-      ...payments,
-      results: filteredResults,
-      count: filteredResults.length
-    };
-  }, [payments, user?.id]);
+      user: user?.id
+    }
+  },[ user?.id])
+
+  const { payments } = usePayments(filter);
+
+  //   // Filter payments client-side
+  // const filteredPayments = useMemo(() => {
+  //   if (!payments?.results || !user?.id) return payments;
+    
+  //   const filteredResults = payments.results.filter(
+  //     payment => payment.user.id === user.id
+  //   );
+    
+  //   return {
+  //     ...payments,
+  //     results: filteredResults,
+  //     count: filteredResults.length
+  //   };
+  // }, [payments, user?.id]);
   
   const { summary } = useUsersYearlySummary(user?.id);
 
@@ -110,7 +117,7 @@ function Dashboard() {
 
       {/* List of announcements */}
       <AnnouncementsTable handleShow={handleShow} notices={notices?.results}/>
-      <PaymentHistoryTable payments={filteredPayments?.results}/>
+      <PaymentHistoryTable payments={payments?.results}/>
       <NoticeModalView onHide={handleClose} onShow={show} selectedNotice={selectedNotice}/>
     </Container>
   );
