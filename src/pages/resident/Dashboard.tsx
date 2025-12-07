@@ -6,44 +6,47 @@ import { useNavigate } from "@tanstack/react-router";
 import PaymentHistoryTable from "../../components/resident/tables/PaymentHistoryTable";
 import { useAuth } from "../../contexts/auth/AuthContext";
 import { useNotices } from "../../hooks/notices/useNotices";
-import { useMemo, useState } from "react";
-import { usePayments } from "../../hooks/payments/usePayments";
+import { useEffect, useMemo, useState } from "react";
+// import { usePayments } from "../../hooks/payments/usePayments";
 import type { NoticeDetail } from "../../models/Notice.model";
 import NoticeModalView from "../../components/resident/NoticeModalView";
 import useUsersYearlySummary from "../../hooks/monthly-bills/useUsersYearlySummary";
 import MixedPieChart from "../../components/MixedPieChart";
 import UserDataView from "./UserDataView";
+import api from "../../api/api";
+import { API_BASE_URL } from "../../api/endpoint";
+import type { RecordPayments } from "../../models/RecordPayment.model";
 
 function Dashboard() {
   const { user } = useAuth();
   const { notices } = useNotices(user?.id);
   const [show, setShow] = useState(false);
   const [selectedNotice, setSelectedNotice] = useState<NoticeDetail | null>(null);
+  const [paymentHistory, setPaymentHistory] = useState<RecordPayments[] | undefined>();
   const navigate = useNavigate();
 
-  const filter = useMemo(() => {
-    if (!user?.id) return {};
-    return {
-      user: user?.id
-    }
-  },[ user?.id])
+  const payments = async () => {
+    const response = await api.get(`${API_BASE_URL}/allpayments`)
+    setPaymentHistory(response.data)
+    // return
+  }
 
-  const { payments } = usePayments(filter);
+  useEffect(() => {
+    payments();
+  },[user?.id])
+
+  // const { payments } = usePayments(filter);
 
   //   // Filter payments client-side
-  // const filteredPayments = useMemo(() => {
-  //   if (!payments?.results || !user?.id) return payments;
+  const filteredPayments = useMemo(() => {
+    if (!user?.id) return paymentHistory;
     
-  //   const filteredResults = payments.results.filter(
-  //     payment => payment.user.id === user.id
-  //   );
+    const filteredResults = paymentHistory?.filter(
+      payment => payment.user.id === user.id
+    );
     
-  //   return {
-  //     ...payments,
-  //     results: filteredResults,
-  //     count: filteredResults.length
-  //   };
-  // }, [payments, user?.id]);
+    return filteredResults
+  }, [paymentHistory, user?.id]);
   
   const { summary } = useUsersYearlySummary(user?.id);
 
@@ -57,6 +60,8 @@ function Dashboard() {
   // const pendingDues = summary?.summary.total_unpaid || 0;
   // const totalPaid = summary?.summary.total_paid || 0;
   // const yearExpectedPayment = summary?.summary.expected_yearly_total || 0;
+
+  console.log(filteredPayments)
   
   return (
     <Container className="pt-5 w-full h-100 d-flex overflow-auto flex-column gap-5">
@@ -117,7 +122,7 @@ function Dashboard() {
 
       {/* List of announcements */}
       <AnnouncementsTable handleShow={handleShow} notices={notices?.results}/>
-      <PaymentHistoryTable payments={payments?.results}/>
+      <PaymentHistoryTable payments={filteredPayments}/>
       <NoticeModalView onHide={handleClose} onShow={show} selectedNotice={selectedNotice}/>
     </Container>
   );
