@@ -19,7 +19,7 @@ export const usePayments = (filters?:{}) => {
   const [error, setError] = useState<string | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
 
-  const fetchPayments = async (filters?:{}) => {
+  const fetchPayments = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -46,18 +46,18 @@ export const usePayments = (filters?:{}) => {
 
   const createPaymentRecord = async (body: {}, headers?: {}) => {
     await createPayment(body, headers);
-    fetchPayments(filters);
+    fetchPayments();
     // return response;
   }
 
   const deletePayment = async (id: string) => {
     await deletePaymentById(id);
-    fetchPayments(filters);
+    fetchPayments();
   }
 
   const updatePayment = async (id: string, body: {}) => {
     await updatePaymentById(id, body)
-    fetchPayments(filters);
+    fetchPayments();
   }
 
   const calculateAdvance = async (payment:{startDate: string, endDate: string, user:number, unit: number}) => {
@@ -78,7 +78,7 @@ export const usePayments = (filters?:{}) => {
 };
 
   useEffect(() => {
-    fetchPayments(filters);
+    fetchPayments();
   }, [filters]);
 
   return {
