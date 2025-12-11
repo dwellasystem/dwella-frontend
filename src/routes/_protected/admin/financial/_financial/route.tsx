@@ -136,15 +136,8 @@ function RouteComponent() {
       <Container className="pt-sm-5 d-flex w-100 h-100 overflow-auto flex-column">
         {/* Header component*/}
         <Header path={"admin"}>
-          <div className="d-flex gap-3">
-            <div
-              onClick={() => navigate({ to: "/admin/financial/record-payment" })}
-              className="d-flex align-items-center gap-2 py-3 px-5 rounded-3"
-              style={{ backgroundColor: "#344CB7", cursor: "pointer" }}
-            >
-              <IoMdAdd size={25} color="white" />
-              <a className="text-decoration-none text-light fw-bold">Record</a>
-            </div>
+          <div className="d-flex align-items-center justify-content-between">
+            <h3 className="fw-bold mb-0">Financial</h3>
           </div>
         </Header>
 
@@ -156,24 +149,37 @@ function RouteComponent() {
           onSearch={(val) => setSearchTerm(val)} 
           onOrderChange={(val) => setOrderBy(val)}
         >
-          <Dropdown>
-            <Dropdown.Toggle 
-              className="d-flex align-items-center gap-2 px-4 py-3 rounded-3 border-0"
-              style={{ backgroundColor: "#2a2c35d7", cursor: "pointer" }}
-            >
-              <IoMdDownload />
-              <span className="fw-bold">Download</span>
-            </Dropdown.Toggle>
+          <div className='d-flex flex-column gap-2 align-items-end justify-content-start'>
+            <div className="d-flex gap-3">
+              <div
+                onClick={() => navigate({ to: "/admin/financial/record-payment" })}
+                className="d-flex align-items-center gap-2 py-3 px-5 rounded-3"
+                style={{ backgroundColor: "#344CB7", cursor: "pointer" }}
+              >
+                <IoMdAdd size={25} color="white" />
+                <a className="text-decoration-none text-light fw-bold">Add Payment</a>
+              </div>
+            </div>
 
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => setShowDownloadModal(true)}>
-                📊 Download Excel Report
-              </Dropdown.Item>
-              {/* <Dropdown.Item onClick={handleDownloadCSV}>
-                📄 Download CSV Report (Current View)
-              </Dropdown.Item> */}
-            </Dropdown.Menu>
-          </Dropdown>
+            <Dropdown className='w-100'>
+              <Dropdown.Toggle 
+                className="d-flex w-100 justify-content-center align-items-center gap-2 px-4 py-3 rounded-3 border-0"
+                style={{ backgroundColor: "#2a2c35d7", cursor: "pointer" }}
+              >
+                <IoMdDownload />
+                <span className="fw-bold">Download</span>
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => setShowDownloadModal(true)}>
+                  📊 Download Excel Report
+                </Dropdown.Item>
+                {/* <Dropdown.Item onClick={handleDownloadCSV}>
+                  📄 Download CSV Report (Current View)
+                </Dropdown.Item> */}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
         </Search>
 
         <Stack direction="horizontal" gap={3}>
