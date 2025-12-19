@@ -1,6 +1,6 @@
 
 import Nav from "react-bootstrap/Nav";
-import { FaHouseChimney, FaHouseUser, FaMoneyBillTransfer, FaPeopleRoof, FaUserTie } from "react-icons/fa6";
+import { FaCircleInfo, FaHouseChimney, FaHouseUser, FaMoneyBillTransfer, FaPeopleRoof, FaUserTie } from "react-icons/fa6";
 import { MdDashboard } from "react-icons/md";
 import { AiOutlineLineChart } from "react-icons/ai";
 import "./side-bar.css"
@@ -10,6 +10,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { CiMenuFries } from "react-icons/ci";
 import { IoCloseSharp } from "react-icons/io5";
 import { RiInformationFill } from "react-icons/ri";
+import { TbUserQuestion } from "react-icons/tb";
 
 
 function SideBar() {
@@ -81,6 +82,20 @@ function SideBar() {
               <FaMoneyBillTransfer />
               <span className={`${ isMenuOpen ? "d-block" : "d-none"} d-md-block text-nowrap`}>
               Monthly Billing
+              </span>
+            </Link>
+
+            <Link to="/admin/notices" className={`text-decoration-none d-flex align-items-center fw-bold gap-2 rounded ${location.pathname.startsWith('/admin/notices') ? 'link-active' : 'link-inactive'}`}>
+              <FaCircleInfo />
+              <span className={`${ isMenuOpen ? "d-block" : "d-none"} d-md-block`}>
+                Notices
+              </span>
+            </Link>
+            
+            <Link to="/admin/inquiries" className={`text-decoration-none d-flex align-items-center fw-bold gap-2 rounded ${location.pathname.startsWith('/admin/inquiries') ? 'link-active' : 'link-inactive'}`}>
+              <TbUserQuestion />
+              <span className={`${ isMenuOpen ? "d-block" : "d-none"} d-md-block`}>
+                Inquiries
               </span>
             </Link>
 

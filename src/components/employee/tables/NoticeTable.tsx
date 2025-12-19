@@ -4,6 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import ViewNoticeModal from "../../modals/ViewNoticeModal";
 import MessageModal from "../../modals/MessageModal";
 import { FaPencilAlt } from "react-icons/fa";
+import { useAuth } from "../../../contexts/auth/AuthContext";
 
 interface Props {
   notices?: NoticeDetail[];
@@ -11,6 +12,7 @@ interface Props {
 }
 
 function NoticeTable(props: Props) {
+  const {role} = useAuth(); 
   const navigate = useNavigate();
 
   return (
@@ -44,7 +46,7 @@ function NoticeTable(props: Props) {
                     <a
                       onClick={() =>
                         navigate({
-                          to: "/employee/notices/$noticeId/edit",
+                          to: `/${role}/notices/$noticeId/edit`,
                           params: { noticeId: notice.id.toString() },
                         })
                       }

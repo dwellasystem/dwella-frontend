@@ -8,6 +8,7 @@ import { useInquiry } from "../../hooks/inquiries/useInquiry"
 import InquiryModal from "../../components/modals/InquiryModal"
 import { useMemo, useState } from "react"
 import { type Inquiry } from "../../models/Inquiry.model"
+import { useAuth } from "../../contexts/auth/AuthContext"
 
 type FormType ={
     resident: number|undefined;
@@ -31,7 +32,7 @@ function Inquiries() {
       };
   }, [searchTerm, type]);
 
-
+  const {role} = useAuth()
   const navigate = useNavigate();
   const {inquiries, loading, error, pageNumber, prevButton, nextButton, updateInquiry, deleteInquiry} = useInquiry(filters);
   const [modalShow, setModalShow] = useState(false);
@@ -83,8 +84,6 @@ function Inquiries() {
     return deleteInquiry(id);
   }
 
-  console.log(inquiries)
-
   return (
     <Container className="pt-sm-5 d-flex overflow-auto flex-column">
 
@@ -98,7 +97,7 @@ function Inquiries() {
       {/* Search engine component with request button*/}
       <Search sortByInquiryType={true} onSearch={(value) => setSearchTerm(value)} onOrderChange={(type) => setType(type)}>
         <div className="align-self-start">
-            <a onClick={() => navigate({to:'/employee/inquiries/create'})} className="text-decoration-none d-flex align-items-center gap-3 text-light px-5 py-3 rounded-3 fw-bold" style={{backgroundColor:"#344CB7", cursor:'pointer'}}>
+            <a onClick={() => navigate({to:`/${role}/inquiries/create`})} className="text-decoration-none d-flex align-items-center gap-3 text-light px-5 py-3 rounded-3 fw-bold" style={{backgroundColor:"#344CB7", cursor:'pointer'}}>
                 <IoMdAdd size={25}/>
                 Log New Inquiry
             </a>

@@ -6,10 +6,12 @@ import { IoMdAdd } from "react-icons/io";
 import { useNotices } from "../../hooks/notices/useNotices";
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useAuth } from "../../contexts/auth/AuthContext";
 
 function Notices() {
     const [searchTerm, setSearchTerm] = useState("");
     const [type, setType] = useState("");
+    const {role} = useAuth();
   
     // ✅ Memoize filters — prevents infinite fetching
     const filters = useMemo(() => {
@@ -45,7 +47,7 @@ function Notices() {
       <Search onSearch={(value) => setSearchTerm(value)} onOrderChange={(type) => setType(type)} sortByType={true}>
         <div className="align-self-start">
           <a
-            onClick={() => navigate({to:'/employee/notices/create'})}
+            onClick={() => navigate({to:`/${role}/notices/create`})}
             className="text-decoration-none d-flex align-items-center gap-3 text-light px-4 py-3 rounded-3 fw-bold"
             style={{ backgroundColor: "#344CB7", cursor:'pointer' }}
           >

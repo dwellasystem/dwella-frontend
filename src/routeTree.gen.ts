@@ -51,7 +51,9 @@ import { Route as ProtectedEmployeeNoticesRouteImport } from './routes/_protecte
 import { Route as ProtectedEmployeeInquiriesRouteImport } from './routes/_protected/employee/inquiries/route'
 import { Route as ProtectedAdminResidentRouteImport } from './routes/_protected/admin/resident/route'
 import { Route as ProtectedAdminNotificationsRouteImport } from './routes/_protected/admin/notifications/route'
+import { Route as ProtectedAdminNoticesRouteImport } from './routes/_protected/admin/notices/route'
 import { Route as ProtectedAdminMonthlyBillRouteImport } from './routes/_protected/admin/monthly-bill/route'
+import { Route as ProtectedAdminInquiriesRouteImport } from './routes/_protected/admin/inquiries/route'
 import { Route as ProtectedAdminFinancialRouteImport } from './routes/_protected/admin/financial/route'
 import { Route as ProtectedAdminEmployeeRouteImport } from './routes/_protected/admin/employee/route'
 import { Route as ProtectedEmployeeUnitsIndexImport } from './routes/_protected/employee/units/index'
@@ -65,7 +67,9 @@ import { Route as ProtectedEmployeeAssignedUnitsIndexImport } from './routes/_pr
 import { Route as ProtectedAdminUnitsIndexImport } from './routes/_protected/admin/units/index'
 import { Route as ProtectedAdminResidentIndexImport } from './routes/_protected/admin/resident/index'
 import { Route as ProtectedAdminNotificationsIndexImport } from './routes/_protected/admin/notifications/index'
+import { Route as ProtectedAdminNoticesIndexImport } from './routes/_protected/admin/notices/index'
 import { Route as ProtectedAdminMonthlyBillIndexImport } from './routes/_protected/admin/monthly-bill/index'
+import { Route as ProtectedAdminInquiriesIndexImport } from './routes/_protected/admin/inquiries/index'
 import { Route as ProtectedAdminInformationIndexImport } from './routes/_protected/admin/information/index'
 import { Route as ProtectedAdminEmployeeIndexImport } from './routes/_protected/admin/employee/index'
 import { Route as ProtectedAdminAssignedUnitsIndexImport } from './routes/_protected/admin/assigned-units/index'
@@ -81,8 +85,10 @@ import { Route as ProtectedEmployeeTaskSummaryOpenInquiriesImport } from './rout
 import { Route as ProtectedAdminResidentAddResidentImport } from './routes/_protected/admin/resident/add-resident'
 import { Route as ProtectedAdminNotificationsSendSmsImport } from './routes/_protected/admin/notifications/send-sms'
 import { Route as ProtectedAdminNotificationsCreateImport } from './routes/_protected/admin/notifications/create'
+import { Route as ProtectedAdminNoticesCreateImport } from './routes/_protected/admin/notices/create'
 import { Route as ProtectedAdminMonthlyBillRemindersImport } from './routes/_protected/admin/monthly-bill/reminders'
 import { Route as ProtectedAdminMonthlyBillCreateImport } from './routes/_protected/admin/monthly-bill/create'
+import { Route as ProtectedAdminInquiriesCreateImport } from './routes/_protected/admin/inquiries/create'
 import { Route as ProtectedAdminFinancialRecordPaymentImport } from './routes/_protected/admin/financial/record-payment'
 import { Route as ProtectedAdminEmployeeAddEmployeeImport } from './routes/_protected/admin/employee/add-employee'
 import { Route as ProtectedEmployeeResidentResidentIdRouteImport } from './routes/_protected/employee/resident/$residentId/route'
@@ -97,6 +103,7 @@ import { Route as ProtectedEmployeeResidentResidentIdEditImport } from './routes
 import { Route as ProtectedEmployeeNoticesNoticeIdEditImport } from './routes/_protected/employee/notices/$noticeId/edit'
 import { Route as ProtectedEmployeeMonthlyBillIdEditImport } from './routes/_protected/employee/monthly-bill/$id/edit'
 import { Route as ProtectedAdminResidentResidentIdEditImport } from './routes/_protected/admin/resident/$residentId/edit'
+import { Route as ProtectedAdminNoticesNoticeIdEditImport } from './routes/_protected/admin/notices/$noticeId/edit'
 import { Route as ProtectedAdminMonthlyBillIdEditImport } from './routes/_protected/admin/monthly-bill/$id/edit'
 import { Route as ProtectedAdminFinancialEditResidentIdImport } from './routes/_protected/admin/financial/edit/$residentId'
 import { Route as ProtectedAdminFinancialFinancialMonthlyDueImport } from './routes/_protected/admin/financial/_financial/monthly-due'
@@ -374,10 +381,25 @@ const ProtectedAdminNotificationsRouteRoute =
     getParentRoute: () => ProtectedAdminRouteRoute,
   } as any)
 
+const ProtectedAdminNoticesRouteRoute = ProtectedAdminNoticesRouteImport.update(
+  {
+    id: '/notices',
+    path: '/notices',
+    getParentRoute: () => ProtectedAdminRouteRoute,
+  } as any,
+)
+
 const ProtectedAdminMonthlyBillRouteRoute =
   ProtectedAdminMonthlyBillRouteImport.update({
     id: '/monthly-bill',
     path: '/monthly-bill',
+    getParentRoute: () => ProtectedAdminRouteRoute,
+  } as any)
+
+const ProtectedAdminInquiriesRouteRoute =
+  ProtectedAdminInquiriesRouteImport.update({
+    id: '/inquiries',
+    path: '/inquiries',
     getParentRoute: () => ProtectedAdminRouteRoute,
   } as any)
 
@@ -471,11 +493,26 @@ const ProtectedAdminNotificationsIndexRoute =
     getParentRoute: () => ProtectedAdminNotificationsRouteRoute,
   } as any)
 
+const ProtectedAdminNoticesIndexRoute = ProtectedAdminNoticesIndexImport.update(
+  {
+    id: '/',
+    path: '/',
+    getParentRoute: () => ProtectedAdminNoticesRouteRoute,
+  } as any,
+)
+
 const ProtectedAdminMonthlyBillIndexRoute =
   ProtectedAdminMonthlyBillIndexImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => ProtectedAdminMonthlyBillRouteRoute,
+  } as any)
+
+const ProtectedAdminInquiriesIndexRoute =
+  ProtectedAdminInquiriesIndexImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ProtectedAdminInquiriesRouteRoute,
   } as any)
 
 const ProtectedAdminInformationIndexRoute =
@@ -583,6 +620,13 @@ const ProtectedAdminNotificationsCreateRoute =
     getParentRoute: () => ProtectedAdminNotificationsRouteRoute,
   } as any)
 
+const ProtectedAdminNoticesCreateRoute =
+  ProtectedAdminNoticesCreateImport.update({
+    id: '/create',
+    path: '/create',
+    getParentRoute: () => ProtectedAdminNoticesRouteRoute,
+  } as any)
+
 const ProtectedAdminMonthlyBillRemindersRoute =
   ProtectedAdminMonthlyBillRemindersImport.update({
     id: '/reminders',
@@ -595,6 +639,13 @@ const ProtectedAdminMonthlyBillCreateRoute =
     id: '/create',
     path: '/create',
     getParentRoute: () => ProtectedAdminMonthlyBillRouteRoute,
+  } as any)
+
+const ProtectedAdminInquiriesCreateRoute =
+  ProtectedAdminInquiriesCreateImport.update({
+    id: '/create',
+    path: '/create',
+    getParentRoute: () => ProtectedAdminInquiriesRouteRoute,
   } as any)
 
 const ProtectedAdminFinancialRecordPaymentRoute =
@@ -692,6 +743,13 @@ const ProtectedAdminResidentResidentIdEditRoute =
     id: '/edit',
     path: '/edit',
     getParentRoute: () => ProtectedAdminResidentResidentIdRouteRoute,
+  } as any)
+
+const ProtectedAdminNoticesNoticeIdEditRoute =
+  ProtectedAdminNoticesNoticeIdEditImport.update({
+    id: '/$noticeId/edit',
+    path: '/$noticeId/edit',
+    getParentRoute: () => ProtectedAdminNoticesRouteRoute,
   } as any)
 
 const ProtectedAdminMonthlyBillIdEditRoute =
@@ -843,11 +901,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminFinancialRouteImport
       parentRoute: typeof ProtectedAdminRouteImport
     }
+    '/_protected/admin/inquiries': {
+      id: '/_protected/admin/inquiries'
+      path: '/inquiries'
+      fullPath: '/admin/inquiries'
+      preLoaderRoute: typeof ProtectedAdminInquiriesRouteImport
+      parentRoute: typeof ProtectedAdminRouteImport
+    }
     '/_protected/admin/monthly-bill': {
       id: '/_protected/admin/monthly-bill'
       path: '/monthly-bill'
       fullPath: '/admin/monthly-bill'
       preLoaderRoute: typeof ProtectedAdminMonthlyBillRouteImport
+      parentRoute: typeof ProtectedAdminRouteImport
+    }
+    '/_protected/admin/notices': {
+      id: '/_protected/admin/notices'
+      path: '/notices'
+      fullPath: '/admin/notices'
+      preLoaderRoute: typeof ProtectedAdminNoticesRouteImport
       parentRoute: typeof ProtectedAdminRouteImport
     }
     '/_protected/admin/notifications': {
@@ -1109,6 +1181,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminFinancialRecordPaymentImport
       parentRoute: typeof ProtectedAdminFinancialRouteImport
     }
+    '/_protected/admin/inquiries/create': {
+      id: '/_protected/admin/inquiries/create'
+      path: '/create'
+      fullPath: '/admin/inquiries/create'
+      preLoaderRoute: typeof ProtectedAdminInquiriesCreateImport
+      parentRoute: typeof ProtectedAdminInquiriesRouteImport
+    }
     '/_protected/admin/monthly-bill/create': {
       id: '/_protected/admin/monthly-bill/create'
       path: '/create'
@@ -1122,6 +1201,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/monthly-bill/reminders'
       preLoaderRoute: typeof ProtectedAdminMonthlyBillRemindersImport
       parentRoute: typeof ProtectedAdminMonthlyBillRouteImport
+    }
+    '/_protected/admin/notices/create': {
+      id: '/_protected/admin/notices/create'
+      path: '/create'
+      fullPath: '/admin/notices/create'
+      preLoaderRoute: typeof ProtectedAdminNoticesCreateImport
+      parentRoute: typeof ProtectedAdminNoticesRouteImport
     }
     '/_protected/admin/notifications/create': {
       id: '/_protected/admin/notifications/create'
@@ -1228,12 +1314,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminInformationIndexImport
       parentRoute: typeof ProtectedAdminRouteImport
     }
+    '/_protected/admin/inquiries/': {
+      id: '/_protected/admin/inquiries/'
+      path: '/'
+      fullPath: '/admin/inquiries/'
+      preLoaderRoute: typeof ProtectedAdminInquiriesIndexImport
+      parentRoute: typeof ProtectedAdminInquiriesRouteImport
+    }
     '/_protected/admin/monthly-bill/': {
       id: '/_protected/admin/monthly-bill/'
       path: '/'
       fullPath: '/admin/monthly-bill/'
       preLoaderRoute: typeof ProtectedAdminMonthlyBillIndexImport
       parentRoute: typeof ProtectedAdminMonthlyBillRouteImport
+    }
+    '/_protected/admin/notices/': {
+      id: '/_protected/admin/notices/'
+      path: '/'
+      fullPath: '/admin/notices/'
+      preLoaderRoute: typeof ProtectedAdminNoticesIndexImport
+      parentRoute: typeof ProtectedAdminNoticesRouteImport
     }
     '/_protected/admin/notifications/': {
       id: '/_protected/admin/notifications/'
@@ -1353,6 +1453,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/monthly-bill/$id/edit'
       preLoaderRoute: typeof ProtectedAdminMonthlyBillIdEditImport
       parentRoute: typeof ProtectedAdminMonthlyBillRouteImport
+    }
+    '/_protected/admin/notices/$noticeId/edit': {
+      id: '/_protected/admin/notices/$noticeId/edit'
+      path: '/$noticeId/edit'
+      fullPath: '/admin/notices/$noticeId/edit'
+      preLoaderRoute: typeof ProtectedAdminNoticesNoticeIdEditImport
+      parentRoute: typeof ProtectedAdminNoticesRouteImport
     }
     '/_protected/admin/resident/$residentId/edit': {
       id: '/_protected/admin/resident/$residentId/edit'
@@ -1529,6 +1636,22 @@ const ProtectedAdminFinancialRouteRouteWithChildren =
     ProtectedAdminFinancialRouteRouteChildren,
   )
 
+interface ProtectedAdminInquiriesRouteRouteChildren {
+  ProtectedAdminInquiriesCreateRoute: typeof ProtectedAdminInquiriesCreateRoute
+  ProtectedAdminInquiriesIndexRoute: typeof ProtectedAdminInquiriesIndexRoute
+}
+
+const ProtectedAdminInquiriesRouteRouteChildren: ProtectedAdminInquiriesRouteRouteChildren =
+  {
+    ProtectedAdminInquiriesCreateRoute: ProtectedAdminInquiriesCreateRoute,
+    ProtectedAdminInquiriesIndexRoute: ProtectedAdminInquiriesIndexRoute,
+  }
+
+const ProtectedAdminInquiriesRouteRouteWithChildren =
+  ProtectedAdminInquiriesRouteRoute._addFileChildren(
+    ProtectedAdminInquiriesRouteRouteChildren,
+  )
+
 interface ProtectedAdminMonthlyBillRouteRouteChildren {
   ProtectedAdminMonthlyBillCreateRoute: typeof ProtectedAdminMonthlyBillCreateRoute
   ProtectedAdminMonthlyBillRemindersRoute: typeof ProtectedAdminMonthlyBillRemindersRoute
@@ -1551,6 +1674,25 @@ const ProtectedAdminMonthlyBillRouteRouteChildren: ProtectedAdminMonthlyBillRout
 const ProtectedAdminMonthlyBillRouteRouteWithChildren =
   ProtectedAdminMonthlyBillRouteRoute._addFileChildren(
     ProtectedAdminMonthlyBillRouteRouteChildren,
+  )
+
+interface ProtectedAdminNoticesRouteRouteChildren {
+  ProtectedAdminNoticesCreateRoute: typeof ProtectedAdminNoticesCreateRoute
+  ProtectedAdminNoticesIndexRoute: typeof ProtectedAdminNoticesIndexRoute
+  ProtectedAdminNoticesNoticeIdEditRoute: typeof ProtectedAdminNoticesNoticeIdEditRoute
+}
+
+const ProtectedAdminNoticesRouteRouteChildren: ProtectedAdminNoticesRouteRouteChildren =
+  {
+    ProtectedAdminNoticesCreateRoute: ProtectedAdminNoticesCreateRoute,
+    ProtectedAdminNoticesIndexRoute: ProtectedAdminNoticesIndexRoute,
+    ProtectedAdminNoticesNoticeIdEditRoute:
+      ProtectedAdminNoticesNoticeIdEditRoute,
+  }
+
+const ProtectedAdminNoticesRouteRouteWithChildren =
+  ProtectedAdminNoticesRouteRoute._addFileChildren(
+    ProtectedAdminNoticesRouteRouteChildren,
   )
 
 interface ProtectedAdminNotificationsRouteRouteChildren {
@@ -1636,7 +1778,9 @@ const ProtectedAdminResidentRouteRouteWithChildren =
 interface ProtectedAdminRouteRouteChildren {
   ProtectedAdminEmployeeRouteRoute: typeof ProtectedAdminEmployeeRouteRouteWithChildren
   ProtectedAdminFinancialRouteRoute: typeof ProtectedAdminFinancialRouteRouteWithChildren
+  ProtectedAdminInquiriesRouteRoute: typeof ProtectedAdminInquiriesRouteRouteWithChildren
   ProtectedAdminMonthlyBillRouteRoute: typeof ProtectedAdminMonthlyBillRouteRouteWithChildren
+  ProtectedAdminNoticesRouteRoute: typeof ProtectedAdminNoticesRouteRouteWithChildren
   ProtectedAdminNotificationsRouteRoute: typeof ProtectedAdminNotificationsRouteRouteWithChildren
   ProtectedAdminResidentRouteRoute: typeof ProtectedAdminResidentRouteRouteWithChildren
   ProtectedAdminAccountRoute: typeof ProtectedAdminAccountRoute
@@ -1653,8 +1797,11 @@ const ProtectedAdminRouteRouteChildren: ProtectedAdminRouteRouteChildren = {
     ProtectedAdminEmployeeRouteRouteWithChildren,
   ProtectedAdminFinancialRouteRoute:
     ProtectedAdminFinancialRouteRouteWithChildren,
+  ProtectedAdminInquiriesRouteRoute:
+    ProtectedAdminInquiriesRouteRouteWithChildren,
   ProtectedAdminMonthlyBillRouteRoute:
     ProtectedAdminMonthlyBillRouteRouteWithChildren,
+  ProtectedAdminNoticesRouteRoute: ProtectedAdminNoticesRouteRouteWithChildren,
   ProtectedAdminNotificationsRouteRoute:
     ProtectedAdminNotificationsRouteRouteWithChildren,
   ProtectedAdminResidentRouteRoute:
@@ -1921,7 +2068,9 @@ export interface FileRoutesByFullPath {
   '/resident': typeof ProtectedResidentRouteRouteWithChildren
   '/admin/employee': typeof ProtectedAdminEmployeeRouteRouteWithChildren
   '/admin/financial': typeof ProtectedAdminFinancialFinancialRouteRouteWithChildren
+  '/admin/inquiries': typeof ProtectedAdminInquiriesRouteRouteWithChildren
   '/admin/monthly-bill': typeof ProtectedAdminMonthlyBillRouteRouteWithChildren
+  '/admin/notices': typeof ProtectedAdminNoticesRouteRouteWithChildren
   '/admin/notifications': typeof ProtectedAdminNotificationsRouteRouteWithChildren
   '/admin/resident': typeof ProtectedAdminResidentRouteRouteWithChildren
   '/employee/inquiries': typeof ProtectedEmployeeInquiriesRouteRouteWithChildren
@@ -1958,8 +2107,10 @@ export interface FileRoutesByFullPath {
   '/employee/resident/$residentId': typeof ProtectedEmployeeResidentResidentIdViewRouteRouteWithChildren
   '/admin/employee/add-employee': typeof ProtectedAdminEmployeeAddEmployeeRoute
   '/admin/financial/record-payment': typeof ProtectedAdminFinancialRecordPaymentRoute
+  '/admin/inquiries/create': typeof ProtectedAdminInquiriesCreateRoute
   '/admin/monthly-bill/create': typeof ProtectedAdminMonthlyBillCreateRoute
   '/admin/monthly-bill/reminders': typeof ProtectedAdminMonthlyBillRemindersRoute
+  '/admin/notices/create': typeof ProtectedAdminNoticesCreateRoute
   '/admin/notifications/create': typeof ProtectedAdminNotificationsCreateRoute
   '/admin/notifications/send-sms': typeof ProtectedAdminNotificationsSendSmsRoute
   '/admin/resident/add-resident': typeof ProtectedAdminResidentAddResidentRoute
@@ -1975,7 +2126,9 @@ export interface FileRoutesByFullPath {
   '/admin/assigned-units': typeof ProtectedAdminAssignedUnitsIndexRoute
   '/admin/employee/': typeof ProtectedAdminEmployeeIndexRoute
   '/admin/information': typeof ProtectedAdminInformationIndexRoute
+  '/admin/inquiries/': typeof ProtectedAdminInquiriesIndexRoute
   '/admin/monthly-bill/': typeof ProtectedAdminMonthlyBillIndexRoute
+  '/admin/notices/': typeof ProtectedAdminNoticesIndexRoute
   '/admin/notifications/': typeof ProtectedAdminNotificationsIndexRoute
   '/admin/resident/': typeof ProtectedAdminResidentIndexRoute
   '/admin/units': typeof ProtectedAdminUnitsIndexRoute
@@ -1991,6 +2144,7 @@ export interface FileRoutesByFullPath {
   '/admin/financial/monthly-due': typeof ProtectedAdminFinancialFinancialMonthlyDueRoute
   '/admin/financial/edit/$residentId': typeof ProtectedAdminFinancialEditResidentIdRoute
   '/admin/monthly-bill/$id/edit': typeof ProtectedAdminMonthlyBillIdEditRoute
+  '/admin/notices/$noticeId/edit': typeof ProtectedAdminNoticesNoticeIdEditRoute
   '/admin/resident/$residentId/edit': typeof ProtectedAdminResidentResidentIdEditRoute
   '/employee/monthly-bill/$id/edit': typeof ProtectedEmployeeMonthlyBillIdEditRoute
   '/employee/notices/$noticeId/edit': typeof ProtectedEmployeeNoticesNoticeIdEditRoute
@@ -2045,8 +2199,10 @@ export interface FileRoutesByTo {
   '/employee/resident/$residentId': typeof ProtectedEmployeeResidentResidentIdViewIndexRoute
   '/admin/employee/add-employee': typeof ProtectedAdminEmployeeAddEmployeeRoute
   '/admin/financial/record-payment': typeof ProtectedAdminFinancialRecordPaymentRoute
+  '/admin/inquiries/create': typeof ProtectedAdminInquiriesCreateRoute
   '/admin/monthly-bill/create': typeof ProtectedAdminMonthlyBillCreateRoute
   '/admin/monthly-bill/reminders': typeof ProtectedAdminMonthlyBillRemindersRoute
+  '/admin/notices/create': typeof ProtectedAdminNoticesCreateRoute
   '/admin/notifications/create': typeof ProtectedAdminNotificationsCreateRoute
   '/admin/notifications/send-sms': typeof ProtectedAdminNotificationsSendSmsRoute
   '/admin/resident/add-resident': typeof ProtectedAdminResidentAddResidentRoute
@@ -2062,7 +2218,9 @@ export interface FileRoutesByTo {
   '/admin/assigned-units': typeof ProtectedAdminAssignedUnitsIndexRoute
   '/admin/employee': typeof ProtectedAdminEmployeeIndexRoute
   '/admin/information': typeof ProtectedAdminInformationIndexRoute
+  '/admin/inquiries': typeof ProtectedAdminInquiriesIndexRoute
   '/admin/monthly-bill': typeof ProtectedAdminMonthlyBillIndexRoute
+  '/admin/notices': typeof ProtectedAdminNoticesIndexRoute
   '/admin/notifications': typeof ProtectedAdminNotificationsIndexRoute
   '/admin/resident': typeof ProtectedAdminResidentIndexRoute
   '/admin/units': typeof ProtectedAdminUnitsIndexRoute
@@ -2078,6 +2236,7 @@ export interface FileRoutesByTo {
   '/admin/financial/monthly-due': typeof ProtectedAdminFinancialFinancialMonthlyDueRoute
   '/admin/financial/edit/$residentId': typeof ProtectedAdminFinancialEditResidentIdRoute
   '/admin/monthly-bill/$id/edit': typeof ProtectedAdminMonthlyBillIdEditRoute
+  '/admin/notices/$noticeId/edit': typeof ProtectedAdminNoticesNoticeIdEditRoute
   '/admin/resident/$residentId/edit': typeof ProtectedAdminResidentResidentIdEditRoute
   '/employee/monthly-bill/$id/edit': typeof ProtectedEmployeeMonthlyBillIdEditRoute
   '/employee/notices/$noticeId/edit': typeof ProtectedEmployeeNoticesNoticeIdEditRoute
@@ -2103,7 +2262,9 @@ export interface FileRoutesById {
   '/_protected/resident': typeof ProtectedResidentRouteRouteWithChildren
   '/_protected/admin/employee': typeof ProtectedAdminEmployeeRouteRouteWithChildren
   '/_protected/admin/financial': typeof ProtectedAdminFinancialRouteRouteWithChildren
+  '/_protected/admin/inquiries': typeof ProtectedAdminInquiriesRouteRouteWithChildren
   '/_protected/admin/monthly-bill': typeof ProtectedAdminMonthlyBillRouteRouteWithChildren
+  '/_protected/admin/notices': typeof ProtectedAdminNoticesRouteRouteWithChildren
   '/_protected/admin/notifications': typeof ProtectedAdminNotificationsRouteRouteWithChildren
   '/_protected/admin/resident': typeof ProtectedAdminResidentRouteRouteWithChildren
   '/_protected/employee/inquiries': typeof ProtectedEmployeeInquiriesRouteRouteWithChildren
@@ -2141,8 +2302,10 @@ export interface FileRoutesById {
   '/_protected/employee/resident/$residentId': typeof ProtectedEmployeeResidentResidentIdRouteRouteWithChildren
   '/_protected/admin/employee/add-employee': typeof ProtectedAdminEmployeeAddEmployeeRoute
   '/_protected/admin/financial/record-payment': typeof ProtectedAdminFinancialRecordPaymentRoute
+  '/_protected/admin/inquiries/create': typeof ProtectedAdminInquiriesCreateRoute
   '/_protected/admin/monthly-bill/create': typeof ProtectedAdminMonthlyBillCreateRoute
   '/_protected/admin/monthly-bill/reminders': typeof ProtectedAdminMonthlyBillRemindersRoute
+  '/_protected/admin/notices/create': typeof ProtectedAdminNoticesCreateRoute
   '/_protected/admin/notifications/create': typeof ProtectedAdminNotificationsCreateRoute
   '/_protected/admin/notifications/send-sms': typeof ProtectedAdminNotificationsSendSmsRoute
   '/_protected/admin/resident/add-resident': typeof ProtectedAdminResidentAddResidentRoute
@@ -2158,7 +2321,9 @@ export interface FileRoutesById {
   '/_protected/admin/assigned-units/': typeof ProtectedAdminAssignedUnitsIndexRoute
   '/_protected/admin/employee/': typeof ProtectedAdminEmployeeIndexRoute
   '/_protected/admin/information/': typeof ProtectedAdminInformationIndexRoute
+  '/_protected/admin/inquiries/': typeof ProtectedAdminInquiriesIndexRoute
   '/_protected/admin/monthly-bill/': typeof ProtectedAdminMonthlyBillIndexRoute
+  '/_protected/admin/notices/': typeof ProtectedAdminNoticesIndexRoute
   '/_protected/admin/notifications/': typeof ProtectedAdminNotificationsIndexRoute
   '/_protected/admin/resident/': typeof ProtectedAdminResidentIndexRoute
   '/_protected/admin/units/': typeof ProtectedAdminUnitsIndexRoute
@@ -2176,6 +2341,7 @@ export interface FileRoutesById {
   '/_protected/admin/financial/_financial/monthly-due': typeof ProtectedAdminFinancialFinancialMonthlyDueRoute
   '/_protected/admin/financial/edit/$residentId': typeof ProtectedAdminFinancialEditResidentIdRoute
   '/_protected/admin/monthly-bill/$id/edit': typeof ProtectedAdminMonthlyBillIdEditRoute
+  '/_protected/admin/notices/$noticeId/edit': typeof ProtectedAdminNoticesNoticeIdEditRoute
   '/_protected/admin/resident/$residentId/edit': typeof ProtectedAdminResidentResidentIdEditRoute
   '/_protected/employee/monthly-bill/$id/edit': typeof ProtectedEmployeeMonthlyBillIdEditRoute
   '/_protected/employee/notices/$noticeId/edit': typeof ProtectedEmployeeNoticesNoticeIdEditRoute
@@ -2205,7 +2371,9 @@ export interface FileRouteTypes {
     | '/resident'
     | '/admin/employee'
     | '/admin/financial'
+    | '/admin/inquiries'
     | '/admin/monthly-bill'
+    | '/admin/notices'
     | '/admin/notifications'
     | '/admin/resident'
     | '/employee/inquiries'
@@ -2242,8 +2410,10 @@ export interface FileRouteTypes {
     | '/employee/resident/$residentId'
     | '/admin/employee/add-employee'
     | '/admin/financial/record-payment'
+    | '/admin/inquiries/create'
     | '/admin/monthly-bill/create'
     | '/admin/monthly-bill/reminders'
+    | '/admin/notices/create'
     | '/admin/notifications/create'
     | '/admin/notifications/send-sms'
     | '/admin/resident/add-resident'
@@ -2259,7 +2429,9 @@ export interface FileRouteTypes {
     | '/admin/assigned-units'
     | '/admin/employee/'
     | '/admin/information'
+    | '/admin/inquiries/'
     | '/admin/monthly-bill/'
+    | '/admin/notices/'
     | '/admin/notifications/'
     | '/admin/resident/'
     | '/admin/units'
@@ -2275,6 +2447,7 @@ export interface FileRouteTypes {
     | '/admin/financial/monthly-due'
     | '/admin/financial/edit/$residentId'
     | '/admin/monthly-bill/$id/edit'
+    | '/admin/notices/$noticeId/edit'
     | '/admin/resident/$residentId/edit'
     | '/employee/monthly-bill/$id/edit'
     | '/employee/notices/$noticeId/edit'
@@ -2328,8 +2501,10 @@ export interface FileRouteTypes {
     | '/employee/resident/$residentId'
     | '/admin/employee/add-employee'
     | '/admin/financial/record-payment'
+    | '/admin/inquiries/create'
     | '/admin/monthly-bill/create'
     | '/admin/monthly-bill/reminders'
+    | '/admin/notices/create'
     | '/admin/notifications/create'
     | '/admin/notifications/send-sms'
     | '/admin/resident/add-resident'
@@ -2345,7 +2520,9 @@ export interface FileRouteTypes {
     | '/admin/assigned-units'
     | '/admin/employee'
     | '/admin/information'
+    | '/admin/inquiries'
     | '/admin/monthly-bill'
+    | '/admin/notices'
     | '/admin/notifications'
     | '/admin/resident'
     | '/admin/units'
@@ -2361,6 +2538,7 @@ export interface FileRouteTypes {
     | '/admin/financial/monthly-due'
     | '/admin/financial/edit/$residentId'
     | '/admin/monthly-bill/$id/edit'
+    | '/admin/notices/$noticeId/edit'
     | '/admin/resident/$residentId/edit'
     | '/employee/monthly-bill/$id/edit'
     | '/employee/notices/$noticeId/edit'
@@ -2384,7 +2562,9 @@ export interface FileRouteTypes {
     | '/_protected/resident'
     | '/_protected/admin/employee'
     | '/_protected/admin/financial'
+    | '/_protected/admin/inquiries'
     | '/_protected/admin/monthly-bill'
+    | '/_protected/admin/notices'
     | '/_protected/admin/notifications'
     | '/_protected/admin/resident'
     | '/_protected/employee/inquiries'
@@ -2422,8 +2602,10 @@ export interface FileRouteTypes {
     | '/_protected/employee/resident/$residentId'
     | '/_protected/admin/employee/add-employee'
     | '/_protected/admin/financial/record-payment'
+    | '/_protected/admin/inquiries/create'
     | '/_protected/admin/monthly-bill/create'
     | '/_protected/admin/monthly-bill/reminders'
+    | '/_protected/admin/notices/create'
     | '/_protected/admin/notifications/create'
     | '/_protected/admin/notifications/send-sms'
     | '/_protected/admin/resident/add-resident'
@@ -2439,7 +2621,9 @@ export interface FileRouteTypes {
     | '/_protected/admin/assigned-units/'
     | '/_protected/admin/employee/'
     | '/_protected/admin/information/'
+    | '/_protected/admin/inquiries/'
     | '/_protected/admin/monthly-bill/'
+    | '/_protected/admin/notices/'
     | '/_protected/admin/notifications/'
     | '/_protected/admin/resident/'
     | '/_protected/admin/units/'
@@ -2457,6 +2641,7 @@ export interface FileRouteTypes {
     | '/_protected/admin/financial/_financial/monthly-due'
     | '/_protected/admin/financial/edit/$residentId'
     | '/_protected/admin/monthly-bill/$id/edit'
+    | '/_protected/admin/notices/$noticeId/edit'
     | '/_protected/admin/resident/$residentId/edit'
     | '/_protected/employee/monthly-bill/$id/edit'
     | '/_protected/employee/notices/$noticeId/edit'
@@ -2531,7 +2716,9 @@ export const routeTree = rootRoute
       "children": [
         "/_protected/admin/employee",
         "/_protected/admin/financial",
+        "/_protected/admin/inquiries",
         "/_protected/admin/monthly-bill",
+        "/_protected/admin/notices",
         "/_protected/admin/notifications",
         "/_protected/admin/resident",
         "/_protected/admin/account",
@@ -2611,6 +2798,14 @@ export const routeTree = rootRoute
         "/_protected/admin/financial/upload/"
       ]
     },
+    "/_protected/admin/inquiries": {
+      "filePath": "_protected/admin/inquiries/route.tsx",
+      "parent": "/_protected/admin",
+      "children": [
+        "/_protected/admin/inquiries/create",
+        "/_protected/admin/inquiries/"
+      ]
+    },
     "/_protected/admin/monthly-bill": {
       "filePath": "_protected/admin/monthly-bill/route.tsx",
       "parent": "/_protected/admin",
@@ -2620,6 +2815,15 @@ export const routeTree = rootRoute
         "/_protected/admin/monthly-bill/",
         "/_protected/admin/monthly-bill/$id/edit",
         "/_protected/admin/monthly-bill/$id/"
+      ]
+    },
+    "/_protected/admin/notices": {
+      "filePath": "_protected/admin/notices/route.tsx",
+      "parent": "/_protected/admin",
+      "children": [
+        "/_protected/admin/notices/create",
+        "/_protected/admin/notices/",
+        "/_protected/admin/notices/$noticeId/edit"
       ]
     },
     "/_protected/admin/notifications": {
@@ -2809,6 +3013,10 @@ export const routeTree = rootRoute
       "filePath": "_protected/admin/financial/record-payment.tsx",
       "parent": "/_protected/admin/financial"
     },
+    "/_protected/admin/inquiries/create": {
+      "filePath": "_protected/admin/inquiries/create.tsx",
+      "parent": "/_protected/admin/inquiries"
+    },
     "/_protected/admin/monthly-bill/create": {
       "filePath": "_protected/admin/monthly-bill/create.tsx",
       "parent": "/_protected/admin/monthly-bill"
@@ -2816,6 +3024,10 @@ export const routeTree = rootRoute
     "/_protected/admin/monthly-bill/reminders": {
       "filePath": "_protected/admin/monthly-bill/reminders.tsx",
       "parent": "/_protected/admin/monthly-bill"
+    },
+    "/_protected/admin/notices/create": {
+      "filePath": "_protected/admin/notices/create.tsx",
+      "parent": "/_protected/admin/notices"
     },
     "/_protected/admin/notifications/create": {
       "filePath": "_protected/admin/notifications/create.tsx",
@@ -2877,9 +3089,17 @@ export const routeTree = rootRoute
       "filePath": "_protected/admin/information/index.tsx",
       "parent": "/_protected/admin"
     },
+    "/_protected/admin/inquiries/": {
+      "filePath": "_protected/admin/inquiries/index.tsx",
+      "parent": "/_protected/admin/inquiries"
+    },
     "/_protected/admin/monthly-bill/": {
       "filePath": "_protected/admin/monthly-bill/index.tsx",
       "parent": "/_protected/admin/monthly-bill"
+    },
+    "/_protected/admin/notices/": {
+      "filePath": "_protected/admin/notices/index.tsx",
+      "parent": "/_protected/admin/notices"
     },
     "/_protected/admin/notifications/": {
       "filePath": "_protected/admin/notifications/index.tsx",
@@ -2958,6 +3178,10 @@ export const routeTree = rootRoute
     "/_protected/admin/monthly-bill/$id/edit": {
       "filePath": "_protected/admin/monthly-bill/$id/edit.tsx",
       "parent": "/_protected/admin/monthly-bill"
+    },
+    "/_protected/admin/notices/$noticeId/edit": {
+      "filePath": "_protected/admin/notices/$noticeId/edit.tsx",
+      "parent": "/_protected/admin/notices"
     },
     "/_protected/admin/resident/$residentId/edit": {
       "filePath": "_protected/admin/resident/$residentId/edit.tsx",
